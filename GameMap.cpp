@@ -13,24 +13,25 @@ GameMap::~GameMap() {
 		fclose(fp); // ファイルが開かれていたら閉じる
 	}
 }
-
 //
-//void GameMap::Initialize() {
+//bool GameMap::Initialize() {
+//    FILE* fp = nullptr;
+//    errno_t error = fopen_s(&fp, "./Map.csv", "r");
 //
-//	error = fopen_s(&fp, "./Map.csv", "r");
+//    if (error != 0 || fp == nullptr) {  // fopen_sのエラー確認
+//        return false;  // ファイルオープン失敗
+//    }
 //
-//	if (error != NULL) {//0以外だったら
-//		return 0;
-//	} else {
-//		//マップロード
-//		//マップ番号の最大値まで繰り返す
-//		while (map < (MapHeight * MapWidth) && fscanf_s(fp, "%d,", &MAP[map / MapWidth][map % MapWidth]) != EOF) {
-//			map++;
-//		}
-//	}
-//	
+//    int map = 0;  // マップのインデックスを初期化
+//    // マップロード
+//    while (map < (MapHeight * MapWidth) && fscanf_s(fp, "%d,", &MAP[map / MapWidth][map % MapWidth]) != EOF) {
+//        map++;  // マップのインデックスを増やす
+//    }
+//
+//    fclose(fp);  // ファイルを閉じる
+//    return true;  // 初期化成功
 //}
-//
+
 // マップデータのデバッグ表示
 void GameMap::DebugPrint() const {
 	for (int i = 0; i < MapHeight; ++i) {
@@ -123,7 +124,7 @@ void GameMap::Draw(int windowWidth, int windowHeight) {
                     );
                     break;
 
-                case 99: // イベントトリガー
+                case 99: // 超えられない壁
                     Novice::DrawBox(
                         i * TileSize,
                         j * TileSize,
