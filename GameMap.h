@@ -6,8 +6,9 @@ class GameMap
 {
 public: // メンバ関数
 
-	static const int MapHeight = 5;
-	static const int MapWidth = 7;
+	static const int MapHeight = 30;
+	static const int MapWidth = 12;
+
 	//マップのサイズ
 	int MAP[MapHeight][MapWidth];
 

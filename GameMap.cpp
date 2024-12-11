@@ -93,7 +93,7 @@ void GameMap::Update(int windowWidth, int windowHeight) {
 }
 
 void GameMap::Draw(int windowWidth, int windowHeight) {
-    const int TileSize = 64; // タイル1辺のサイズ
+    const int TileSize = 16;// タイル1辺のサイズ
     const int tilesX = windowWidth / TileSize;  // ウィンドウ幅に収まるタイル数
     const int tilesY = windowHeight / TileSize; // ウィンドウ高さに収まるタイル数
 
@@ -123,13 +123,13 @@ void GameMap::Draw(int windowWidth, int windowHeight) {
                     );
                     break;
 
-                case 2: // イベントトリガー
+                case 99: // イベントトリガー
                     Novice::DrawBox(
                         i * TileSize,
                         j * TileSize,
                         TileSize, TileSize,
                         0.0f,
-                        BLUE, // 色を変える
+                        RED + 1, // 色を変える
                         kFillModeSolid
                     );
                     break;
