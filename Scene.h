@@ -17,4 +17,3 @@ private: // メンバ変数
 	GameMap* gameMap = nullptr;
 
 };
-

@@ -1,13 +1,14 @@
 #pragma once
 #include <stdio.h>
+#include<math/Vector2.h>
 
 // マップクラス
 class GameMap
 {
 public: // メンバ関数
 
-	static const int MapHeight = 30;
-	static const int MapWidth = 12;
+	static const int MapWidth = 24;
+	static const int MapHeight = 7;
 
 	enum TileType {
 		Ground = 0,
@@ -37,15 +38,21 @@ private: // メンバ変数
 	FILE* fp;//宣言
 	int error;//ファイル読み込み
 	// 指定マップチップファルダ
-	const char* Mapfile = "./Map.csv";
+	const char* Mapfile = "./NoviceResources/MAP/MAP.csv";
 	int size;
 	// 色の指定
 	unsigned int Mapcolor[MapHeight][MapWidth]{};
+	// マップの左上座標（中央配置）
+	int startX;
+	int startY;
 
 	// マウス
 	int mousecount;
-	int mouseX = 0; 
-	int mouseY = 0;
+	int mouseX;
+	int mouseY;
+
+	KamataEngine::Vector2 linePos[MapHeight][MapWidth] = { 0.0f,0.0f };
+
 public: // メンバ関数
 
 	// getter

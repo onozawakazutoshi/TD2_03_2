@@ -1,5 +1,4 @@
 #include <Novice.h>
-#include<math/Vector2.h>
 #include"Scene.h"
 
 const char kWindowTitle[] = "学籍番号";
@@ -38,8 +37,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 		scene->Update();
-
-		
 
 		///
 		/// ↑更新処理ここまで

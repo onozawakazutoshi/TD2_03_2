@@ -49,7 +49,7 @@ void GameMap::Initialize() {
 				Mapcolor[i][j] = GREEN;
 				break;
 			case Nnll:
-				Mapcolor[i][j] = BLACK;
+				Mapcolor[i][j] = 0x666666FF;
 				break;
 			default:
 				continue; // 該当なしならスキップ
@@ -58,6 +58,11 @@ void GameMap::Initialize() {
 	}
 
 	mousecount = 0;
+	mouseX = 0;
+	mouseY = 0;
+	startX = (1280 / 2) - ((MapWidth * size) / 2);
+	startY = (720 / 2) - ((MapHeight * size) / 2);
+
 }
 
 void GameMap::Update() {
@@ -71,16 +76,29 @@ void GameMap::Draw() {
 	Novice::ScreenPrintf(0, 0, "Mouse X : %d", mouseX);
 	Novice::ScreenPrintf(0, 20, "Mouse Y : %d", mouseY);
 	Novice::ScreenPrintf(0, 40, "count = %d", mousecount);
-
+	
 	// マップを描画
 	for (int i = 0; i < MapHeight; i++) {
 		for (int j = 0; j < MapWidth; j++) {
 			// 描画
-			Novice::DrawBox(j * size, i * size, size, size, 0.0f, Mapcolor[i][j], kFillModeSolid);
+			Novice::DrawBox(startX + j * size, startY + i * size, size, size, 0.0f, Mapcolor[i][j], kFillModeSolid);
 
+
+			//白線
+			Novice::DrawLine(
+				startX +(int(linePos[0][j].x) + j * int(size)),
+				startY +int(linePos[0][j].y) + 0 * int(size),
+				startX +int(linePos[0][j].x) + j * int(size),
+				startY +int(linePos[0][j].y) + MapHeight * int(size),
+				BLACK);
+			Novice::DrawLine(
+				startX + int(linePos[i][0].x) + 0 * int(size),
+				startY +int(linePos[i][0].y) + i * int(size),
+				startX +int(linePos[i][0].x) + MapWidth * int(size),
+				startY +int(linePos[i][0].y) + i * int(size),
+				BLACK);
 		}
 	}
-
 }
 
 
@@ -90,8 +108,8 @@ void GameMap::MouseUpdate(){
 	Novice::GetMousePosition(&mouseX, &mouseY);
 
 	// マウスの座標から選択中のマスを判定
-	int selectedX = mouseX / size; // 列番号
-	int selectedY = mouseY / size; // 行番号
+	int selectedX = (mouseX - startX) / size; // 列番号
+	int selectedY = (mouseY - startY) / size; // 行番号
 
 	for (int i = 0; i < MapHeight; i++) {
 		for (int j = 0; j < MapWidth; j++) {
@@ -104,7 +122,7 @@ void GameMap::MouseUpdate(){
 				Mapcolor[i][j] = GREEN;
 				break;
 			case Nnll:
-				Mapcolor[i][j] = BLACK;
+				Mapcolor[i][j] = 0x666666FF;
 				break;
 			default:
 				continue; // 該当なしならスキップ
@@ -124,7 +142,7 @@ void GameMap::MouseUpdate(){
 				if (neighborX >= 0 && neighborX < MapWidth &&
 					neighborY >= 0 && neighborY < MapHeight) {
 
-					Mapcolor[neighborY][neighborX] = 0xFFFFFF00 + 200;
+					Mapcolor[neighborY][neighborX] = 0xFFFF0000 + 200;
 
 					if (MAP[neighborY][neighborX] == 0) {
 						if (Novice::IsPressMouse(0)) {
