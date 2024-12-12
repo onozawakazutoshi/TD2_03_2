@@ -23,9 +23,6 @@
     <ClCompile Include="GameMap.cpp">
       <Filter>KamataEngine</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>KamataEngine</Filter>
-    </ClCompile>
     <ClCompile Include="Scene.cpp">
       <Filter>KamataEngine</Filter>
     </ClCompile>
@@ -113,7 +110,6 @@
       <Filter>KamataEngine\Include</Filter>
     </ClInclude>
     <ClInclude Include="GameMap.h" />
-    <ClInclude Include="Player.h" />
     <ClInclude Include="Scene.h" />
   </ItemGroup>
 </Project>
