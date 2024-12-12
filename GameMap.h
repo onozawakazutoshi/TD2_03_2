@@ -13,7 +13,7 @@ public: // メンバ関数
 	enum TileType {
 		Ground = 0,
 		Wall = 1,
-		Nnll = 99,
+		Wall2 = 2,
 	};
 
 	GameMap();
@@ -30,6 +30,8 @@ public: // メンバ関数
 
 	void MouseUpdate();
 
+	void RenderMapSelectionUI();
+
 private: // メンバ変数
 	// マップサイズ
 	int MAP[MapHeight][MapWidth];
@@ -38,7 +40,8 @@ private: // メンバ変数
 	FILE* fp;//宣言
 	int error;//ファイル読み込み
 	// 指定マップチップファルダ
-	const char* Mapfile = "./NoviceResources/MAP/MAP.csv";
+	const char* Mapfile01 = "./NoviceResources/MAP/MAP_01.csv";
+	const char* Mapfile02 = "./NoviceResources/MAP/MAP_02.csv";
 	int size;
 	// 色の指定
 	unsigned int Mapcolor[MapHeight][MapWidth]{};

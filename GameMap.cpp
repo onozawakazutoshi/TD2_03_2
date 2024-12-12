@@ -1,6 +1,7 @@
 #include "GameMap.h"
 #include <iostream>
 #include<Novice.h>
+#include <imgui.h>
 
 // コンストラクタ
 GameMap::GameMap() : fp(nullptr), map(0), error(0),size(0) {
@@ -35,7 +36,7 @@ bool GameMap::LoadFile(const char* filePath) {
 
 void GameMap::Initialize() {
 	// ファイル読み込み
-	LoadFile(Mapfile);
+	LoadFile(Mapfile01);
 	size = 32;
 	// マップチップカラーの初期化
 	for (int i = 0; i < MapHeight; i++) {
@@ -48,7 +49,7 @@ void GameMap::Initialize() {
 			case Wall:
 				Mapcolor[i][j] = GREEN;
 				break;
-			case Nnll:
+			case Wall2:
 				Mapcolor[i][j] = 0x666666FF;
 				break;
 			default:
@@ -67,8 +68,9 @@ void GameMap::Initialize() {
 
 void GameMap::Update() {
 	
+	RenderMapSelectionUI();
+
 	MouseUpdate();
-	
 }
 
 void GameMap::Draw() {
@@ -121,7 +123,7 @@ void GameMap::MouseUpdate(){
 			case Wall:
 				Mapcolor[i][j] = GREEN;
 				break;
-			case Nnll:
+			case Wall2:
 				Mapcolor[i][j] = 0x666666FF;
 				break;
 			default:
@@ -158,4 +160,34 @@ void GameMap::MouseUpdate(){
 			}
 		}
 	}
+}
+
+void GameMap::RenderMapSelectionUI() {
+	//// マップファイルパスのリスト
+	//const char* mapFiles[] = {
+	//	"./NoviceResources/MAP/MAP_01.csv",
+	//	"./NoviceResources/MAP/MAP_02.csv"
+	//};
+
+	//static int selectedMapIndex = 0;  // デフォルトで最初のマップを選択
+
+	//// ドロップダウンでマップを選択
+	//if (ImGui::BeginCombo("Select Map", mapFiles[selectedMapIndex])) {
+	//	for (int i = 0; i < IM_ARRAYSIZE(mapFiles); i++) {
+	//		bool isSelected = (selectedMapIndex == i);
+	//		if (ImGui::Selectable(mapFiles[i], isSelected)) {
+	//			selectedMapIndex = i;
+	//		}
+	//	}
+	//	ImGui::EndCombo();
+	//}
+
+	//// マップを選択したら読み込む
+	//if (ImGui::Button("Load Map")) {
+	//	if (LoadFile(mapFiles[selectedMapIndex])) {
+	//		ImGui::Text("Map loaded successfully.");
+	//	} else {
+	//		ImGui::Text("Failed to load map.");
+	//	}
+	//}
 }
