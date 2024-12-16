@@ -3,26 +3,16 @@
 #include<Novice.h>
 #include <imgui.h>
 
-// コンストラクタ
-GameMap::GameMap() : fp(nullptr), map(0), error(0),size(0) {
-	memset(MAP, 0, sizeof(MAP)); // 配列を0で初期化
-}
-
-// デストラクタ
-GameMap::~GameMap() {
-	if (fp) {
-		fclose(fp); // ファイルが開かれていたら閉じる
-	}
-}
-
 bool GameMap::LoadFile(const char* filePath) {
 	// ファイルを開く
-	error = fopen_s(&fp, filePath, "r");
-	if (error != 0 || fp == nullptr) { // ファイルオープン失敗
+	FILE* fp = nullptr;
+	int error = fopen_s(&fp, filePath, "r");
+	if (error != 0 || fp == nullptr) {  // ファイルオープン失敗
 		return false;
 	}
 
 	// マップデータのロード
+	int map = 0;
 	while (map < (MapHeight * MapWidth) &&
 		fscanf_s(fp, "%d,", &MAP[map / MapWidth][map % MapWidth]) != EOF) {
 		map++;
@@ -30,14 +20,17 @@ bool GameMap::LoadFile(const char* filePath) {
 
 	// ファイルを閉じる
 	fclose(fp);
-	fp = nullptr; // ファイルポインタを無効化
+	fp = nullptr;  // ファイルポインタを無効化
+
+	mapLoaded = true;  // マップが正常にロードされたことを記録
 	return true;
 }
 
 void GameMap::Initialize() {
 	// ファイル読み込み
-	LoadFile(Mapfile01);
+	LoadFile(mapFiles[0]);
 	size = 32;
+
 	// マップチップカラーの初期化
 	for (int i = 0; i < MapHeight; i++) {
 		for (int j = 0; j < MapWidth; j++) {
@@ -63,49 +56,82 @@ void GameMap::Initialize() {
 	mouseY = 0;
 	startX = (1280 / 2) - ((MapWidth * size) / 2);
 	startY = (720 / 2) - ((MapHeight * size) / 2);
-
 }
 
-void GameMap::Update() {
-	
-	RenderMapSelectionUI();
+void GameMap::Update() {	
 
+	//RenderMapSelectionUI();
 	MouseUpdate();
+
 }
 
 void GameMap::Draw() {
-
 	Novice::ScreenPrintf(0, 0, "Mouse X : %d", mouseX);
 	Novice::ScreenPrintf(0, 20, "Mouse Y : %d", mouseY);
 	Novice::ScreenPrintf(0, 40, "count = %d", mousecount);
-	
-	// マップを描画
-	for (int i = 0; i < MapHeight; i++) {
-		for (int j = 0; j < MapWidth; j++) {
-			// 描画
-			Novice::DrawBox(startX + j * size, startY + i * size, size, size, 0.0f, Mapcolor[i][j], kFillModeSolid);
+	Novice::ScreenPrintf(0, 60, "selectedMap : %d", selectedMap);
+	Novice::ScreenPrintf(0, 80, "mapLoaded = %d", mapLoaded);
 
 
-			//白線
-			Novice::DrawLine(
-				startX +(int(linePos[0][j].x) + j * int(size)),
-				startY +int(linePos[0][j].y) + 0 * int(size),
-				startX +int(linePos[0][j].x) + j * int(size),
-				startY +int(linePos[0][j].y) + MapHeight * int(size),
-				BLACK);
-			Novice::DrawLine(
-				startX + int(linePos[i][0].x) + 0 * int(size),
-				startY +int(linePos[i][0].y) + i * int(size),
-				startX +int(linePos[i][0].x) + MapWidth * int(size),
-				startY +int(linePos[i][0].y) + i * int(size),
-				BLACK);
+
+	/*------------------------------------------------------------------------*/
+	/*----------------------------マップ描画------------------------------------*/
+	/*------------------------------------------------------------------------*/
+	if (mapLoaded) {
+		// マップを描画
+		for (int i = 0; i < MapHeight; i++) {
+			for (int j = 0; j < MapWidth; j++) {
+
+				// 描画
+				Novice::DrawBox(startX + j * size, startY + i * size, size, size, 0.0f, Mapcolor[i][j], kFillModeSolid);
+
+
+				//白線
+				Novice::DrawLine(
+					startX + (int(linePos[0][j].x) + j * int(size)),
+					startY + int(linePos[0][j].y) + 0 * int(size),
+					startX + int(linePos[0][j].x) + j * int(size),
+					startY + int(linePos[0][j].y) + MapHeight * int(size),
+					BLACK);
+				Novice::DrawLine(
+					startX + int(linePos[i][0].x) + 0 * int(size),
+					startY + int(linePos[i][0].y) + i * int(size),
+					startX + int(linePos[i][0].x) + MapWidth * int(size),
+					startY + int(linePos[i][0].y) + i * int(size),
+					BLACK);
+			}
 		}
 	}
+	
+	/*------------------------------------------------------------------------*/
+	/*------------------------------IMGUI-------------------------------------*/
+	/*------------------------------------------------------------------------*/	
+	ImGui::Begin("MAP");
+	if (ImGui::Combo("Select Map", &selectedMap, "MAP 01\0MAP 02\0")) {
+		// マップファイルを設定
+		currentMapFile = mapFiles[selectedMap];
+		// マップの削除と再読み込み
+		DeleteMap();
+		LoadFile(currentMapFile);
+	}
+	// マップ削除
+	ImGui::Text("Map : Delete\n");
+	if (ImGui::Button("Delete")) {
+		DeleteMap();
+	}
+	// マップ復元
+	ImGui::Text("Map : Restore\n");
+	if (ImGui::Button("Restore")) {
+		RestoreMap();
+	}
+	ImGui::End();
 }
 
-
 void GameMap::MouseUpdate(){
-
+	if (!mapLoaded) {
+		// マップが削除されている場合、マウス操作を無視または無効化
+		return;
+	}
 	// マウスの位置を取得
 	Novice::GetMousePosition(&mouseX, &mouseY);
 
@@ -162,32 +188,25 @@ void GameMap::MouseUpdate(){
 	}
 }
 
-void GameMap::RenderMapSelectionUI() {
-	//// マップファイルパスのリスト
-	//const char* mapFiles[] = {
-	//	"./NoviceResources/MAP/MAP_01.csv",
-	//	"./NoviceResources/MAP/MAP_02.csv"
-	//};
 
-	//static int selectedMapIndex = 0;  // デフォルトで最初のマップを選択
+// マップを削除（リセット）
+void GameMap::DeleteMap() {
+	if (mapLoaded) {
+		// MAPの内容をクリアする（すべて0にリセット）
+		for (int i = 0; i < MapHeight; ++i) {
+			for (int j = 0; j < MapWidth; ++j) {
+				MAP[i][j] = 0;  // デフォルト値にリセット
+			}
+		}
+		mapLoaded = false;  // マップが削除されたことを記録
+	}
+}
 
-	//// ドロップダウンでマップを選択
-	//if (ImGui::BeginCombo("Select Map", mapFiles[selectedMapIndex])) {
-	//	for (int i = 0; i < IM_ARRAYSIZE(mapFiles); i++) {
-	//		bool isSelected = (selectedMapIndex == i);
-	//		if (ImGui::Selectable(mapFiles[i], isSelected)) {
-	//			selectedMapIndex = i;
-	//		}
-	//	}
-	//	ImGui::EndCombo();
-	//}
-
-	//// マップを選択したら読み込む
-	//if (ImGui::Button("Load Map")) {
-	//	if (LoadFile(mapFiles[selectedMapIndex])) {
-	//		ImGui::Text("Map loaded successfully.");
-	//	} else {
-	//		ImGui::Text("Failed to load map.");
-	//	}
-	//}
+// マップを復元（再読み込み）
+bool GameMap::RestoreMap() {
+	if (!mapLoaded) {
+		// マップが削除されている場合、再読み込みを試みる
+		return LoadFile(currentMapFile);  // 現在のマップファイルを読み込む
+	}
+	return true;  // 既にマップがロードされていれば復元不要
 }

@@ -16,8 +16,6 @@ public: // メンバ関数
 		Wall2 = 2,
 	};
 
-	GameMap();
-	~GameMap();
 
 	// 初期化
 	void Initialize();
@@ -30,18 +28,21 @@ public: // メンバ関数
 
 	void MouseUpdate();
 
-	void RenderMapSelectionUI();
+	void DeleteMap();
+	bool RestoreMap();
 
 private: // メンバ変数
 	// マップサイズ
 	int MAP[MapHeight][MapWidth];
-	//マップ番号割り当て
-	int map = 0;
-	FILE* fp;//宣言
-	int error;//ファイル読み込み
-	// 指定マップチップファルダ
-	const char* Mapfile01 = "./NoviceResources/MAP/MAP_01.csv";
-	const char* Mapfile02 = "./NoviceResources/MAP/MAP_02.csv";
+	// マップチップファルダ
+	const char* mapFiles[2] = { "./NoviceResources/MAP/MAP_01.csv","./NoviceResources/MAP/MAP_02.csv" };
+	// 現在のマップファイルパス
+	const char* currentMapFile = mapFiles[0];  // 初期マップファイル
+	// マップがロードされているかどうか
+	bool mapLoaded = false;
+	// マップ選択
+	int selectedMap = 0;
+	// マップサイズ
 	int size;
 	// 色の指定
 	unsigned int Mapcolor[MapHeight][MapWidth]{};
@@ -55,7 +56,6 @@ private: // メンバ変数
 	int mouseY;
 
 	KamataEngine::Vector2 linePos[MapHeight][MapWidth] = { 0.0f,0.0f };
-
 public: // メンバ関数
 
 	// getter

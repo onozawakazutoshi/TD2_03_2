@@ -9,12 +9,8 @@ void Scene::Initialize() {
 void Scene::Update() {
 	gameMap->Update();
 
-
 }
 
 void Scene::Draw() {
 	gameMap->Draw();
-
-
-
 }
