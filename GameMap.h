@@ -41,7 +41,7 @@ private: // メンバ変数
 	// マップがロードされているかどうか
 	bool mapLoaded = false;
 	// マップ選択
-	int selectedMap = 0;
+	int selectedMap;
 	// マップサイズ
 	int size;
 	// 色の指定
@@ -60,9 +60,7 @@ public: // メンバ関数
 
 	// getter
 	int GetHeight() const{ return MapHeight; }
-	int GetWidth() const { return MapWidth; }
-
-	
+	int GetWidth() const { return MapWidth; }	
 	int GetMapValue(int x, int y) const {
 		if (x >= 0 && x < MapWidth && y >= 0 && y < MapHeight) {
 			return MAP[y][x];
@@ -70,8 +68,7 @@ public: // メンバ関数
 		return -1;
 	}
 
-	// setter
-	
+	// setter	
 	bool SetMapValue(int x, int y, int value) {
 		if (x >= 0 && x < MapWidth && y >= 0 && y < MapHeight) {
 			MAP[y][x] = value;

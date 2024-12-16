@@ -56,13 +56,36 @@ void GameMap::Initialize() {
 	mouseY = 0;
 	startX = (1280 / 2) - ((MapWidth * size) / 2);
 	startY = (720 / 2) - ((MapHeight * size) / 2);
+	selectedMap = 0;
 }
 
 void GameMap::Update() {	
 
-	//RenderMapSelectionUI();
+	// マウスの更新処理
 	MouseUpdate();
-
+   
+	/*------------------------------------------------------------------------*/
+    /*------------------------------IMGUI-------------------------------------*/
+    /*------------------------------------------------------------------------*/
+	ImGui::Begin("MAP");
+	if (ImGui::Combo("Select Map", &selectedMap, "MAP 01\0MAP 02\0")) {
+		// マップファイルを設定
+		currentMapFile = mapFiles[selectedMap];
+		// マップの削除と再読み込み
+		DeleteMap();
+		LoadFile(currentMapFile);
+	}
+	// マップ削除
+	ImGui::Text("Map : Delete\n");
+	if (ImGui::Button("Delete")) {
+		DeleteMap();
+	}
+	// マップ復元
+	ImGui::Text("Map : Restore\n");
+	if (ImGui::Button("Restore")) {
+		RestoreMap();
+	}
+	ImGui::End();
 }
 
 void GameMap::Draw() {
@@ -71,8 +94,6 @@ void GameMap::Draw() {
 	Novice::ScreenPrintf(0, 40, "count = %d", mousecount);
 	Novice::ScreenPrintf(0, 60, "selectedMap : %d", selectedMap);
 	Novice::ScreenPrintf(0, 80, "mapLoaded = %d", mapLoaded);
-
-
 
 	/*------------------------------------------------------------------------*/
 	/*----------------------------マップ描画------------------------------------*/
@@ -102,29 +123,6 @@ void GameMap::Draw() {
 			}
 		}
 	}
-	
-	/*------------------------------------------------------------------------*/
-	/*------------------------------IMGUI-------------------------------------*/
-	/*------------------------------------------------------------------------*/	
-	ImGui::Begin("MAP");
-	if (ImGui::Combo("Select Map", &selectedMap, "MAP 01\0MAP 02\0")) {
-		// マップファイルを設定
-		currentMapFile = mapFiles[selectedMap];
-		// マップの削除と再読み込み
-		DeleteMap();
-		LoadFile(currentMapFile);
-	}
-	// マップ削除
-	ImGui::Text("Map : Delete\n");
-	if (ImGui::Button("Delete")) {
-		DeleteMap();
-	}
-	// マップ復元
-	ImGui::Text("Map : Restore\n");
-	if (ImGui::Button("Restore")) {
-		RestoreMap();
-	}
-	ImGui::End();
 }
 
 void GameMap::MouseUpdate(){
