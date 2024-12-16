@@ -89,11 +89,11 @@ void GameMap::Update() {
 }
 
 void GameMap::Draw() {
-	Novice::ScreenPrintf(0, 0, "Mouse X : %d", mouseX);
-	Novice::ScreenPrintf(0, 20, "Mouse Y : %d", mouseY);
-	Novice::ScreenPrintf(0, 40, "count = %d", mousecount);
-	Novice::ScreenPrintf(0, 60, "selectedMap : %d", selectedMap);
-	Novice::ScreenPrintf(0, 80, "mapLoaded = %d", mapLoaded);
+	Novice::ScreenPrintf(0, 30, "Mouse X : %d", mouseX);
+	Novice::ScreenPrintf(0, 50, "Mouse Y : %d", mouseY);
+	Novice::ScreenPrintf(0, 70, "count = %d", mousecount);
+	Novice::ScreenPrintf(0, 90, "selectedMap : %d", selectedMap);
+	Novice::ScreenPrintf(0, 110, "mapLoaded = %d", mapLoaded);
 
 	/*------------------------------------------------------------------------*/
 	/*----------------------------マップ描画------------------------------------*/
