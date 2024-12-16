@@ -59,11 +59,17 @@ void GameMap::Initialize() {
 	selectedMap = 0;
 }
 
-void GameMap::Update() {	
+void GameMap::Update(const char* keys) {
 
 	// マウスの更新処理
 	MouseUpdate();
    
+
+
+
+	playermove(keys);
+
+
 	/*------------------------------------------------------------------------*/
     /*------------------------------IMGUI-------------------------------------*/
     /*------------------------------------------------------------------------*/
@@ -101,8 +107,8 @@ void GameMap::Draw() {
 	if (mapLoaded) {
 		// マップを描画
 		for (int i = 0; i < MapHeight; i++) {
-			for (int j = 0; j < MapWidth; j++) {	
-				Mapposition[i][j] = {float(startX) + j * size, float(startY) + i * size};
+			for (int j = 0; j < MapWidth; j++) {
+				Mapposition[i][j] = { float(startX) + j * size, float(startY) + i * size };
 
 				// 描画
 				Novice::DrawBox(int(Mapposition[i][j].x), int(Mapposition[i][j].y), size, size, 0.0f, Mapcolor[i][j], kFillModeSolid);
@@ -124,6 +130,9 @@ void GameMap::Draw() {
 			}
 		}
 	}
+
+
+	Novice::DrawBox(int(playerpos.x), int(playerpos.y), playerradius, playerradius, 0.0f, RED, kFillModeSolid);
 }
 
 void GameMap::MouseUpdate(){
@@ -208,4 +217,42 @@ bool GameMap::RestoreMap() {
 		return LoadFile(currentMapFile);  // 現在のマップファイルを読み込む
 	}
 	return true;  // 既にマップがロードされていれば復元不要
+}
+
+void GameMap::Hitbox(int dx, int dy) {
+	// プレイヤーが移動した先の座標を計算
+	int newX = int(playerpos.x) + dx;
+	int newY = int(playerpos.y) + dy;
+
+	// 新しい座標がマップ内かどうかをチェック
+	int mapX = (newX - startX) / size;  // マップのXインデックス
+	int mapY = (newY - startY) / size;  // マップのYインデックス
+
+	// マップ外に出ないようにチェック
+	if (mapX >= 0 && mapX < MapWidth && mapY >= 0 && mapY < MapHeight){
+		// 移動先のマップ番号が0なら移動可能、1なら移動不可
+		if (MAP[mapY][mapX] != 0){
+			// 衝突しているので移動をキャンセル
+			return;
+		}
+	}
+
+	playerpos.x = float(newX);  // プレイヤーを移動
+	playerpos.y = float(newY);
+}
+
+
+void GameMap::playermove(const char* keys) {
+	if (keys[DIK_W]) {
+		Hitbox(0, int(-moveSpeed));  // 上に移動
+	}
+	if (keys[DIK_S]) {
+		Hitbox(0, int(moveSpeed));  // 下に移動
+	}
+	if (keys[DIK_A]) {
+		Hitbox(int(-moveSpeed), 0);  // 左に移動
+	}
+	if (keys[DIK_D]) {
+		Hitbox(int(moveSpeed), 0);  // 右に移動
+	}
 }

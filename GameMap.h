@@ -20,7 +20,7 @@ public: // メンバ関数
 	// 初期化
 	void Initialize();
 	// 更新処理
-	void Update();
+	void Update(const char* keys);
 	// 描画処理
 	void Draw();
 	// マップ読み込み
@@ -30,6 +30,9 @@ public: // メンバ関数
 
 	void DeleteMap();
 	bool RestoreMap();
+
+	void  Hitbox(int dx, int dy);
+	void playermove(const char* keys);
 
 private: // メンバ変数
 	// マップサイズ
@@ -49,14 +52,20 @@ private: // メンバ変数
 	// マップの左上座標（中央配置）
 	int startX;
 	int startY;
+	// マップの座標
 	KamataEngine::Vector2 Mapposition[MapHeight][MapWidth]{};
-
 	// マウス
 	int mousecount;
 	int mouseX;
 	int mouseY;
-
 	KamataEngine::Vector2 linePos[MapHeight][MapWidth] = { 0.0f,0.0f };
+
+
+	// 当たり判定(仮)
+	KamataEngine::Vector2 playerpos = { 640.0f,360.0f };
+	int playerradius = 32;
+	float moveSpeed = 2.0f;
+
 public: // メンバ関数
 
 	// getter
