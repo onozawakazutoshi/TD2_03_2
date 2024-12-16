@@ -101,10 +101,11 @@ void GameMap::Draw() {
 	if (mapLoaded) {
 		// マップを描画
 		for (int i = 0; i < MapHeight; i++) {
-			for (int j = 0; j < MapWidth; j++) {
+			for (int j = 0; j < MapWidth; j++) {	
+				Mapposition[i][j] = {float(startX) + j * size, float(startY) + i * size};
 
 				// 描画
-				Novice::DrawBox(startX + j * size, startY + i * size, size, size, 0.0f, Mapcolor[i][j], kFillModeSolid);
+				Novice::DrawBox(int(Mapposition[i][j].x), int(Mapposition[i][j].y), size, size, 0.0f, Mapcolor[i][j], kFillModeSolid);
 
 
 				//白線

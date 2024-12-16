@@ -49,6 +49,7 @@ private: // メンバ変数
 	// マップの左上座標（中央配置）
 	int startX;
 	int startY;
+	KamataEngine::Vector2 Mapposition[MapHeight][MapWidth]{};
 
 	// マウス
 	int mousecount;
@@ -61,19 +62,18 @@ public: // メンバ関数
 	// getter
 	int GetHeight() const{ return MapHeight; }
 	int GetWidth() const { return MapWidth; }	
-	int GetMapValue(int x, int y) const {
-		if (x >= 0 && x < MapWidth && y >= 0 && y < MapHeight) {
-			return MAP[y][x];
+	KamataEngine::Vector2 GetMapPosition(int i, int j) const {
+		if (i >= 0 && i < MapHeight && j >= 0 && j < MapWidth) {
+			return Mapposition[i][j];
 		}
-		return -1;
+		return KamataEngine::Vector2{ 0.0f, 0.0f };  // 範囲外の場合はデフォルト値を返す
 	}
 
 	// setter	
-	bool SetMapValue(int x, int y, int value) {
-		if (x >= 0 && x < MapWidth && y >= 0 && y < MapHeight) {
-			MAP[y][x] = value;
-			return true;
+	void SetMapPosition(int i, int j, const KamataEngine::Vector2& position) {
+		if (i >= 0 && i < MapHeight && j >= 0 && j < MapWidth) {
+			Mapposition[i][j] = position;
 		}
-		return false;
 	}
+
 };
