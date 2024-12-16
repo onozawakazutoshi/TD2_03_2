@@ -24,7 +24,7 @@ public: // メンバ関数
 
 private: // メンバ変数
 	// シーンの現在の状態
-	SceneState currentState = SceneState::Title;
+	SceneState currentState = SceneState::Game;// 初期のシーン
 	// ポインタ
 	GameMap* gameMap = nullptr;
 	Player* player = nullptr;

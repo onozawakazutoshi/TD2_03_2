@@ -19,11 +19,11 @@ void Scene::Update(const char* keys, const char* prekeys){
         break;
     case SceneState::Game:
 
-        gameMap->Update();
-        player->Update();
+        gameMap->Update(keys);
+        player->Update(keys);
 
         if (keys[DIK_SPACE] && !prekeys[DIK_SPACE]) {
-            currentState = SceneState::Clear;
+           // currentState = SceneState::Clear;
         }
 
         break;
@@ -31,8 +31,8 @@ void Scene::Update(const char* keys, const char* prekeys){
 
         if (keys[DIK_SPACE] && !prekeys[DIK_SPACE]) {
             currentState = SceneState::Title;
-
         }
+
         break;
     }
 }
