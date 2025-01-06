@@ -31,8 +31,10 @@ public: // メンバ関数
 	void DeleteMap();
 	bool RestoreMap();
 
-	void  Hitbox(int dx, int dy);
+	void Hitbox(float moveSpeedX, float moveSpeedY);
 	void playermove(const char* keys);
+
+	void unitarrangement();
 
 private: // メンバ変数
 	// マップサイズ
@@ -65,6 +67,12 @@ private: // メンバ変数
 	KamataEngine::Vector2 playerpos = { 640.0f,360.0f };
 	int playerradius = 32;
 	float moveSpeed = 2.0f;
+
+
+
+	// 味方(仮)
+	KamataEngine::Vector2 unitpos = { 0.0f,0.0f };
+
 
 public: // メンバ関数
 
