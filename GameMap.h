@@ -34,8 +34,6 @@ public: // メンバ関数
 	void Hitbox(float moveSpeedX, float moveSpeedY);
 	void playermove(const char* keys);
 
-	void unitarrangement();
-
 private: // メンバ変数
 	// マップサイズ
 	int MAP[MapHeight][MapWidth];
@@ -58,8 +56,8 @@ private: // メンバ変数
 	KamataEngine::Vector2 Mapposition[MapHeight][MapWidth]{};
 	// マウス
 	int mousecount;
-	int mouseX;
-	int mouseY;
+	int mouseX_;
+	int mouseY_;
 	KamataEngine::Vector2 linePos[MapHeight][MapWidth] = { 0.0f,0.0f };
 
 

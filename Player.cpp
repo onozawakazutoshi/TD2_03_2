@@ -6,10 +6,8 @@ using namespace KamataEngine;
 
 void Player::Initialize() {
 
-
 	position = { 640.0f, 360.0f };
 	radius = 14;
-
 
 }
 

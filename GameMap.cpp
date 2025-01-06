@@ -53,8 +53,8 @@ void GameMap::Initialize() {
 	}
 
 	mousecount = 0;
-	mouseX = 0;
-	mouseY = 0;
+	mouseX_ = 0;
+	mouseY_ = 0;
 	startX = (1280 / 2) - ((MapWidth * size) / 2);
 	startY = (720 / 2) - ((MapHeight * size) / 2);
 	selectedMap = 0;
@@ -96,8 +96,8 @@ void GameMap::Update(const char* keys) {
 }
 
 void GameMap::Draw() {
-	Novice::ScreenPrintf(0, 30, "Mouse X : %d", mouseX);
-	Novice::ScreenPrintf(0, 50, "Mouse Y : %d", mouseY);
+	Novice::ScreenPrintf(0, 30, "Mouse X : %d", mouseX_);
+	Novice::ScreenPrintf(0, 50, "Mouse Y : %d", mouseY_);
 	Novice::ScreenPrintf(0, 70, "count = %d", mousecount);
 	Novice::ScreenPrintf(0, 90, "selectedMap : %d", selectedMap);
 	Novice::ScreenPrintf(0, 110, "mapLoaded = %d", mapLoaded);
@@ -142,11 +142,11 @@ void GameMap::MouseUpdate(){
 		return;
 	}
 	// マウスの位置を取得
-	Novice::GetMousePosition(&mouseX, &mouseY);
+	Novice::GetMousePosition(&mouseX_, &mouseY_);
 
 	// マウスの座標から選択中のマスを判定
-	int selectedX = (mouseX - startX) / size; // 列番号
-	int selectedY = (mouseY - startY) / size; // 行番号
+	int selectedX = (mouseX_ - startX) / size; // 列番号
+	int selectedY = (mouseY_ - startY) / size; // 行番号
 
 	for (int i = 0; i < MapHeight; i++) {
 		for (int j = 0; j < MapWidth; j++) {
@@ -186,9 +186,9 @@ void GameMap::MouseUpdate(){
 							mousecount++;
 							// 色を変更
 							Mapcolor[neighborY][neighborX] = RED;
-
-							unitarrangement();
-
+							// プレイヤーの座標を、選択されたセルに基づいて設定
+							playerpos.x = startX + neighborX * size + size / static_cast<float>(2) - playerradius / static_cast<float>(2);  // X座標を計算
+							playerpos.y = startY + neighborY * size + size / static_cast<float>(2) - playerradius / static_cast<float>(2);  // Y座標を計算
 						} else {
 							mousecount = 0;
 							//Mapcolor[neighborY][neighborX] = 0xFFFFFF00 + 200;
@@ -288,12 +288,4 @@ void GameMap::playermove(const char* keys) {
 	if (keys[DIK_D]) {
 		Hitbox(moveSpeed, 0);  // 右に移動
 	}
-}
-
-
-
-void GameMap::unitarrangement() {
-
-
-
 }
