@@ -20,10 +20,14 @@
     <ClCompile Include="C:\KamataEngine\Adapter\Novice.cpp">
       <Filter>KamataEngine\Adapter</Filter>
     </ClCompile>
+
     <ClCompile Include="Map.cpp">
       <Filter>KamataEngine</Filter>
     </ClCompile>
     <ClCompile Include="GameScene.cpp">
+
+    <ClCompile Include="Enemy.cpp">
+
       <Filter>KamataEngine</Filter>
     </ClCompile>
   </ItemGroup>
@@ -111,5 +115,7 @@
     </ClInclude>
     <ClInclude Include="Map.h" />
     <ClInclude Include="GameScene.h" />
+
+    <ClInclude Include="Enemy.h" />
   </ItemGroup>
 </Project>
