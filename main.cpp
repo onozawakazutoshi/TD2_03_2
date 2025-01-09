@@ -1,12 +1,22 @@
+
+#include"GameScene.h"
+
 #include <Novice.h>
 #include"Enemy.h"
 
 const char kWindowTitle[] = "学籍番号";
 
+using namespace KamataEngine;
+
+int windowWidth = 1280;
+int windowHeight = 720;
+
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// ライブラリの初期化
+
+	//Novice::Initialize(kWindowTitle, windowWidth, windowHeight);
 	Novice::Initialize(kWindowTitle, 1280, 720);
 
 	// キー入力結果を受け取る箱
@@ -45,11 +55,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// フレームの終了
 		Novice::EndFrame();
 
-		// ESCキーが押されたらループを抜ける
-		if (preKeys[DIK_ESCAPE] == 0 && keys[DIK_ESCAPE] != 0) {
-			break;
-		}
-	}
+	// 初期化
+	GameScene* gamescene = new GameScene();	
+	gamescene->Initialize();
+	
+	// 全ての処理
+	gamescene->UpdateDraw();
 
 	// ライブラリの終了
 	Novice::Finalize();
