@@ -18,7 +18,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	gamescene->Initialize();
 	
 	// 全ての処理
-	gamescene->Update();
+	gamescene->UpdateDraw();
 
 	// ライブラリの終了
 	Novice::Finalize();
