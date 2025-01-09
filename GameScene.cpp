@@ -1,14 +1,12 @@
-#include "Scene.h"
+#include "GameScene.h"
 
-void Scene::Initialize() {
-	gameMap = new GameMap();
-	player = new Player();
-	gameMap->Initialize();
-	player->Initialize();
+void GameScene::Initialize() {
+	map_ = new Map();
+	map_->Initialize();
 
 }
 
-void Scene::Update(const char* keys, const char* prekeys){
+void GameScene::Update(const char* keys, const char* prekeys){
     switch (currentState){
     case SceneState::Title:
 
@@ -19,9 +17,7 @@ void Scene::Update(const char* keys, const char* prekeys){
         break;
     case SceneState::Game:
 
-        gameMap->Update(keys);
-        player->Update(keys);
-
+        map_->Update(keys);
         if (keys[DIK_SPACE] && !prekeys[DIK_SPACE]) {
            // currentState = SceneState::Clear;
         }
@@ -37,7 +33,7 @@ void Scene::Update(const char* keys, const char* prekeys){
     }
 }
 
-void Scene::Draw() {
+void GameScene::Draw() {
     switch (currentState)
     {
     case SceneState::Title: 
@@ -49,8 +45,7 @@ void Scene::Draw() {
         Novice::ScreenPrintf(0, 0, "Scene : Game");
 
 
-        gameMap->Draw();
-        player->Draw();
+        map_->Draw();
 
         break;
     case SceneState::Clear:

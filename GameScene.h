@@ -1,10 +1,9 @@
 #pragma once
-#include"GameMap.h"
-#include"Player.h"
+#include"Map.h"
 #include <Novice.h>
 
 // シーンクラス
-class Scene
+class GameScene
 {
 public: // メンバ関数
 	// シーンの状態を管理する列挙型
@@ -26,6 +25,5 @@ private: // メンバ変数
 	// シーンの現在の状態
 	SceneState currentState = SceneState::Game;// 初期のシーン
 	// ポインタ
-	GameMap* gameMap = nullptr;
-	Player* player = nullptr;
+	Map* map_ = nullptr;
 };
