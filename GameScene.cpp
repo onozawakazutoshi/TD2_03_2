@@ -1,57 +1,90 @@
 #include "GameScene.h"
 
-void GameScene::Initialize() {
-	map_ = new Map();
+void GameScene::Initialize() {	
+    map_ = new Map();
 	map_->Initialize();
 
 }
 
-void GameScene::Update(const char* keys, const char* prekeys){
-    switch (currentState){
-    case SceneState::Title:
+int GameScene::UpdateDraw(){
+    // ウィンドウの×ボタンが押されるまでループ
+    while (Novice::ProcessMessage() == 0) {
+        // フレームの開始
+        Novice::BeginFrame();
 
-        if (keys[DIK_SPACE] && !prekeys[DIK_SPACE]) {
-            currentState = SceneState::Game;
+        // キー入力を受け取る
+        memcpy(preKeys, keys, 256);
+        Novice::GetHitKeyStateAll(keys);
+
+        //////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////// ↓更新処理ここから
+        //////////////////////////////////////////////////////
+
+        switch (currentState) {
+        case SceneState::Title:
+
+            if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
+                currentState = SceneState::Game;
+            }
+
+            break;
+        case SceneState::Game:
+
+            map_->Update(keys);
+            if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
+                // currentState = SceneState::Clear;
+            }
+
+            break;
+        case SceneState::Clear:
+
+            if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
+                currentState = SceneState::Title;
+            }
+
+            break;
         }
 
-        break;
-    case SceneState::Game:
+        //////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////// ↑更新処理ここまで
+        //////////////////////////////////////////////////////
 
-        map_->Update(keys);
-        if (keys[DIK_SPACE] && !prekeys[DIK_SPACE]) {
-           // currentState = SceneState::Clear;
+        //////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////// ↓描画処理ここから
+        //////////////////////////////////////////////////////
+
+        switch (currentState)
+        {
+        case SceneState::Title:
+            Novice::ScreenPrintf(0, 0, "Scene : Title");
+
+
+            break;
+        case SceneState::Game:
+            Novice::ScreenPrintf(0, 0, "Scene : Game");
+
+
+            map_->Draw();
+
+            break;
+        case SceneState::Clear:
+            Novice::ScreenPrintf(0, 0, "Scene : Clear");
+
+
+            break;
         }
+        
+        //////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////// ↑描画処理ここまで
+        //////////////////////////////////////////////////////
 
-        break;
-    case SceneState::Clear:
+        // フレームの終了
+        Novice::EndFrame();
 
-        if (keys[DIK_SPACE] && !prekeys[DIK_SPACE]) {
-            currentState = SceneState::Title;
+        // ESCキーが押されたらループを抜ける
+        if (preKeys[DIK_ESCAPE] == 0 && keys[DIK_ESCAPE] != 0) {
+            break;
         }
-
-        break;
     }
-}
-
-void GameScene::Draw() {
-    switch (currentState)
-    {
-    case SceneState::Title: 
-        Novice::ScreenPrintf(0,0,"Scene : Title");
-
-
-        break;
-    case SceneState::Game:
-        Novice::ScreenPrintf(0, 0, "Scene : Game");
-
-
-        map_->Draw();
-
-        break;
-    case SceneState::Clear:
-        Novice::ScreenPrintf(0, 0, "Scene : Clear");
-
-
-        break;
-    }
+    return 0;
 }

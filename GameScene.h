@@ -16,12 +16,13 @@ public: // メンバ関数
 
 	// 初期化
 	void Initialize();
-	// 更新処理
-	void Update(const char* keys,const char* prekeys);
-	// 描画処理
-	void Draw();
-
+	// 更新描画処理
+	int UpdateDraw();
+	
 private: // メンバ変数
+	// キー入力結果を受け取る箱
+	char keys[256] = { 0 };
+	char preKeys[256] = { 0 };
 	// シーンの現在の状態
 	SceneState currentState = SceneState::Game;// 初期のシーン
 	// ポインタ
