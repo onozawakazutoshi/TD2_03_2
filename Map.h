@@ -1,6 +1,7 @@
 #pragma once
 #include <stdio.h>
 #include<math/Vector2.h>
+#include<Novice.h>
 
 class Map
 {
@@ -59,6 +60,11 @@ public: // メンバ関数
 	// マップ呼び出し
 	bool CheckLoadMap(const char* File, KamataEngine::Vector2 Size);
 
+	// 画像での描画
+	void SpriteDraw();
+	// 画像サイズを指定しての描画
+	void SpriteRectDraw();
+
 private: // メンバ変数
 	// マップデータ
 	Map::MapData mapData_;
@@ -77,6 +83,27 @@ private: // メンバ変数
 	KamataEngine::Vector2 linePos[MaxMapHeight][MaxMapWidth] = { 0.0f,0.0f };
 	// 読み込みフラグ
 	bool loadMapFlag = false;
+
+	///-----------------------描画関連-----------------------///
+	// 画像を読み込み、グラフィックスハンドルを保存する
+	int tile = Novice::LoadTexture("./NoviceResources/Tile/Tile.png");
+	int Block = Novice::LoadTexture("./NoviceResources/Tile/Block.png");
+	int SafEarea = Novice::LoadTexture("./NoviceResources/Tile/SafEarea.png");
+	int TiTles = Novice::LoadTexture("./NoviceResources/Tile/TiTles.png");
+	// 最大描画サイズ
+	float MaxTiTles = 64.0f;
+	// 開始の描画	
+	KamataEngine::Vector2 startspritetile[4] = { {0.0f,0.0f},{0.0f,32.0f},{32.0f,0.0f},32.0f,32.0f };
+	// 指定する描画サイズ
+	KamataEngine::Vector2 tilesize{};
+	// 描画モードの列挙型
+	enum DrawMode {
+		DRAW_BOX = 0,       // ボックス描画
+		DRAW_SPRITE = 1,    // スプライト描画
+		DRAW_SPRITE_RECT = 2 // サイズ指定スプライト描画
+	};
+	// 現在の描画モードを保持する変数
+	int currentDrawMode = DRAW_BOX;
 
 public:
 	// setter

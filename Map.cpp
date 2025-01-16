@@ -107,6 +107,9 @@ void Map::Initialize() {
 	mouseData_.mousecount = 0;
 	mouseData_.PositionX = 0;
 	mouseData_.PositionY = 0;
+
+	// 画像サイズ
+	tilesize = { 32.0f,32.0f };
 }
 
 void Map::Update(const char* keys) {
@@ -136,17 +139,88 @@ void Map::Draw() {
 
 	/*----------------------------描画------------------------------------*/
 	if (mapLoaded) {
+		switch (currentDrawMode) {
+		case DRAW_BOX:
 		for (int i = 0; i < mapData_.Height; i++) {
 			for (int j = 0; j < mapData_.Width; j++) {
 				// マップ
-				Novice::DrawBox(int(mapData_.Mapposition[i][j].x), int(mapData_.Mapposition[i][j].y), mapData_.size, mapData_.size, 0.0f, mapData_.color[i][j], kFillModeSolid);
+				Novice::DrawBox(
+					int(mapData_.Mapposition[i][j].x),int(mapData_.Mapposition[i][j].y),
+					mapData_.size,mapData_.size,
+					0.0f,
+					mapData_.color[i][j],
+					kFillModeSolid
+				);
 				// 線
 				DrawLine(i, j);
 			}
 		}
+		break;
+		case DRAW_SPRITE:
+			// 画像での描画
+			SpriteDraw();
+			break;
+		case DRAW_SPRITE_RECT:
+			//サイズを指定しての描画 
+			SpriteRectDraw();
+			break;
+		default:
+			break;
+		}
 	}
+}
 
+void Map::SpriteDraw() {
+	int resources = 0;
 
+	for (int i = 0; i < mapData_.Height; i++) {
+		for (int j = 0; j < mapData_.Width; j++) {
+			if (mapData_.MAP[i][j] == 0) {
+				resources = tile;
+			}else if (mapData_.MAP[i][j] == 1) {
+				resources = SafEarea;
+			}
+			else if (mapData_.MAP[i][j] == 2) {
+				resources = Block; 
+			}
+
+			Novice::DrawSprite(
+				int(mapData_.Mapposition[i][j].x),int(mapData_.Mapposition[i][j].y), //描画するスプライトの左上座標
+				resources,    // テクスチャハンドル
+				1,1,          // 描画するスプライトの倍率
+				0,            // 描画するスプライトの回転角
+				0xFFFFFFFF    // 色
+				);
+		}
+	}
+}
+
+void Map::SpriteRectDraw() {
+	int resources = 0;
+	Vector2 starttile{};
+	resources = TiTles;	
+	for (int i = 0; i < mapData_.Height; i++) {
+		for (int j = 0; j < mapData_.Width; j++) {
+			if (mapData_.MAP[i][j] == 0) {
+				starttile = startspritetile[0];
+			}else if (mapData_.MAP[i][j] == 1) {
+				starttile = startspritetile[1];
+			}else if (mapData_.MAP[i][j] == 2) {
+				starttile = startspritetile[2];
+			}
+
+			Novice::DrawSpriteRect(
+				int(mapData_.Mapposition[i][j].x), int(mapData_.Mapposition[i][j].y), //描画するスプライトの左上座標
+				int(starttile.x), int(starttile.y),                 // 画像上の描画したい範囲左上座標
+				int(tilesize.x), int(tilesize.y),                   // 画像上の描画したい横幅、縦幅
+				TiTles,	                                            // テクスチャハンドル
+				(tilesize.x / MaxTiTles), (tilesize.y / MaxTiTles),	// 倍率 ( 描画したいサイズ / 画像のサイズ )
+				0,		                                            // 回転
+				0xFFFFFFFF	                                        // 色
+			);
+
+		}
+	}
 }
 
 void Map::DrawLine(const int i, const int j) {
@@ -192,6 +266,14 @@ void Map::RenderUI() {
 				}
 			}
 		}
+		// 区切り線
+		ImGui::Separator();
+		// ImGui ウィンドウ
+		ImGui::Text("Map Draw Mode");
+		// 描画モードの選択肢
+		const char* drawModes[] = { "Box", "Sprite", "SpriteRect" };
+		// Combo ボックスで選択肢を表示
+		ImGui::Combo("Draw Mode", &currentDrawMode, drawModes, IM_ARRAYSIZE(drawModes));
 	}
 	ImGui::End();
 }
@@ -306,3 +388,6 @@ bool Map::CheckLoadMap(const char* File, Vector2 Size) {
 	}
 	return loadMapFlag = false;
 }
+
+
+
