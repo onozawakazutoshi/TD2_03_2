@@ -51,6 +51,8 @@ bool Map::LoadMap(const char* filePath, Vector2& Sizes) {
 	return true;
 }
 
+
+
 void Map::MapDataInitialize() {
 	// マップチップサイズ
 	mapData_.size = 32;
@@ -134,8 +136,8 @@ void Map::Update(const char* keys) {
 }
 
 void Map::Draw() {
-	Novice::ScreenPrintf(0, 90, "selectedMap : %d", selectedMap);
-	Novice::ScreenPrintf(0, 110, "mapLoaded = %d", mapLoaded);
+	Novice::ScreenPrintf(0, 30, "selectedMap : %d", selectedMap);
+	Novice::ScreenPrintf(0, 50, "mapLoaded = %d", mapLoaded);
 
 	/*----------------------------描画------------------------------------*/
 	if (mapLoaded) {
@@ -254,6 +256,7 @@ void Map::RenderUI() {
 				currentMapFile = mapFiles[selectedMap];
 				LoadMap(mapFiles[selectedMap], mapData_.mapSizes[selectedMap]);
 			}
+
 			// マップデータを表示
 			if (ImGui::CollapsingHeader("Map Data")) {
 				for (int i = 0; i < mapData_.Height; i++) {
@@ -297,32 +300,16 @@ void Map::MouseUpdate() {
 		// マップが削除されている場合、マウス操作を無視または無効化
 		return;
 	}
+	
+	// マップカラ―
+	ColorMapping();
+
 	// マウスの位置を取得
 	Novice::GetMousePosition(&mouseData_.PositionX, &mouseData_.PositionY);
 
 	// マウスの座標から選択中のマスを判定
 	int selectedX = (mouseData_.PositionX - int(mapData_.Mapstart.x)) / mapData_.size; // 列番号
 	int selectedY = (mouseData_.PositionY - int(mapData_.Mapstart.y)) / mapData_.size; // 行番号
-
-	for (int i = 0; i < mapData_.Height; i++) {
-		for (int j = 0; j < mapData_.Width; j++) {
-			// 各switchに色を指定
-			switch (mapData_.MAP[i][j]) {
-			case Ground:
-				mapData_.color[i][j] = WHITE;
-				break;
-			case Wall:
-				mapData_.color[i][j] = GREEN;
-				break;
-			case Wall2:
-				mapData_.color[i][j] = 0x666666FF;
-				break;
-			default:
-				continue; // 該当なしならスキップ
-				break;
-			}
-		}
-	}
 
 	if (selectedX >= 0 && selectedX < mapData_.Width &&
 		selectedY >= 0 && selectedY < mapData_.Height) {
@@ -388,6 +375,3 @@ bool Map::CheckLoadMap(const char* File, Vector2 Size) {
 	}
 	return loadMapFlag = false;
 }
-
-
-

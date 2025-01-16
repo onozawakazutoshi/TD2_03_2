@@ -6,7 +6,7 @@ void GameScene::Initialize() {
 
 }
 
-int GameScene::UpdateDraw(){
+int GameScene::Update(){
     // ウィンドウの×ボタンが押されるまでループ
     while (Novice::ProcessMessage() == 0) {
         // フレームの開始

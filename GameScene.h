@@ -17,7 +17,7 @@ public: // メンバ関数
 	// 初期化
 	void Initialize();
 	// 更新描画処理
-	int UpdateDraw();
+	int Update();
 
 private: // メンバ変数
 	// キー入力結果を受け取る箱

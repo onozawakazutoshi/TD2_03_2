@@ -12,13 +12,6 @@ public: // メンバ関数
 	static const int MaxMapWidth = 50;
 	static const int MaxMapHeight = 7;
 
-	// マップ選択
-	enum TileType {
-		Ground = 0,
-		Wall = 1,
-		Wall2 = 2,
-	};
-
 	// マップデータ
 	struct MapData {
 		int MAP[MaxMapHeight][MaxMapWidth];		        	                // マップのサイズ
@@ -43,27 +36,28 @@ public: // メンバ関数
 	void Update(const char* keys);
 	// 描画処理
 	void Draw();
-	// マップ読み込み
-	bool LoadMap(const char* filePath, KamataEngine::Vector2 &Sizes);
-	//マップデータの初期化
-	void MapDataInitialize();
-	// カラーを指定
-	void ColorMapping();
-	// マップの削除
-	void ClearMap();
-	// 線の描画
-	void DrawLine(const int i , const int j);	
-	// imgui
-	void RenderUI();
 	// マウスの更新処理
 	void MouseUpdate();
 	// マップ呼び出し
 	bool CheckLoadMap(const char* File, KamataEngine::Vector2 Size);
-
+private:
+	// マップ読み込み
+	bool LoadMap(const char* filePath, KamataEngine::Vector2& Sizes);
+	// マップデータの初期化
+	void MapDataInitialize();
+	// カラーを指定
+	void ColorMapping();
+	// 線の描画
+	void DrawLine(const int i, const int j);
+	// マップの削除
+	void ClearMap();
 	// 画像での描画
 	void SpriteDraw();
 	// 画像サイズを指定しての描画
 	void SpriteRectDraw();
+	// imgui関連
+	void RenderUI();
+
 
 private: // メンバ変数
 	// マップデータ
@@ -74,6 +68,12 @@ private: // メンバ変数
 	const char* currentMapFile;
 	// マップがロードされているかどうか
 	bool mapLoaded = false;
+	// マップ選択
+	enum TileType {
+		Ground = 0,
+		Wall = 1,
+		Wall2 = 2,
+	};
 	// マップ選択
 	int selectedMap;
 	// マウスデータ
