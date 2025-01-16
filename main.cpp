@@ -1,51 +1,89 @@
 #include <Novice.h>
 #include <imgui.h>
 #include "GameStateManager.h"
-#include "Player.h"
+#include"GameState.h"
 const char kWindowTitle[] = "学籍番号";
-
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
-	// ライブラリの初期化
-	Novice::Initialize(kWindowTitle, 1280, 720);
+    // ライブラリの初期化
+    Novice::Initialize(kWindowTitle, 1280, 720);
 
-	// キー入力結果を受け取る箱
-	char keys[256] = {0};
-	char preKeys[256] = {0};
-	std::vector<Player> entities;
-    GameStateManager<Player> stateManager(0);
+    // キー入力結果を受け取る箱
+    char keys[256] = { 0 };
+    char preKeys[256] = { 0 };
 
-	 // 当前选中的玩家索引
+    GameState gameState;
+    gameState.players;
+    gameState.enemies = { Enemy(500.0f, 360.0f, 50.0f, 50.0f, RED) };
+    GameStateManager<GameState> stateManager(0);
+
+    float enemySpeed = 5.0f;
+
     int selectedPlayerIndex = -1;
 
-	// ウィンドウの×ボタンが押されるまでループ
-	while (Novice::ProcessMessage() == 0) {
-		// フレームの開始
-		Novice::BeginFrame();
+    bool isPaused = false;
+    // ウィンドウの×ボタンが押されるまでループ
+    while (Novice::ProcessMessage() == 0) {
+        // フレームの開始
+        Novice::BeginFrame();
 
-		// キー入力を受け取る
-		memcpy(preKeys, keys, 256);
-		Novice::GetHitKeyStateAll(keys);
+        // キー入力を受け取る
+        memcpy(preKeys, keys, 256);
+        Novice::GetHitKeyStateAll(keys);
 
-		///
-		/// ↓更新処理ここから
-		///
-        stateManager.SaveState(entities);
+        ///
+        /// ↓更新処理ここから
+        ///
+        /// 
+
+
+        if (preKeys[DIK_SPACE] == 0 && keys[DIK_SPACE] != 0) {
+            isPaused = !isPaused;
+        }
+        if (!isPaused) {
+            stateManager.SaveState(gameState);
+
+
+            for (auto& enemy : gameState.enemies) {
+                enemy.x += enemySpeed;
+                if (enemy.x - enemy.width / 2 > 1280) {
+                    enemy.x = -enemy.width / 2;
+                }
+            }
+
+        }
 
         if (Novice::IsTriggerMouse(1)) {
             int mouseX, mouseY;
             Novice::GetMousePosition(&mouseX, &mouseY);
 
-            entities.emplace_back(static_cast<float>(mouseX), static_cast<float>(mouseY), 50.0f, 50.0f, WHITE);
+            gameState.players.emplace_back(static_cast<float>(mouseX), static_cast<float>(mouseY), 50.0f, 50.0f, WHITE);
         }
-		 ImGui::Begin("entities Editor");
-        ImGui::Text("entities: %zu", entities.size());
+        //戻す
+        if (keys[DIK_LEFT]) {
+            stateManager.UndoState(gameState, 5);
+        }
+        //早く送る
+        if (keys[DIK_RIGHT]) {
+            stateManager.RedoState(gameState, 5);
+        }
+        ImGui::Begin("Game State Controls");
+
+        if (ImGui::Button("Clear All States")) {
+            gameState.players.clear();
+            gameState.enemies.clear();
+            // 
+            stateManager = GameStateManager<GameState>(stateManager.GetCurrentFrame());
+        }
+        ImGui::Begin("Game State Info");
+        ImGui::Text("Current Frame: %d", stateManager.GetCurrentFrame());
+        ImGui::Text("entities: %zu", gameState.players.size());
 
         // 
-        for (size_t i = 0; i < entities.size(); ++i) {
+        for (size_t i = 0; i < gameState.players.size(); ++i) {
             char label[32];
-            snprintf(label, sizeof(label), "entitie %zu", i);
+            snprintf(label, sizeof(label), "players %zu", i);
 
             if (ImGui::Selectable(label, selectedPlayerIndex == static_cast<int>(i))) {
                 selectedPlayerIndex = static_cast<int>(i);
@@ -53,8 +91,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         }
 
         // プレイヤーを選択して
-        if (selectedPlayerIndex >= 0 && selectedPlayerIndex < static_cast<int>(entities.size())) {
-            Player& selectedPlayer = entities[selectedPlayerIndex];
+        if (selectedPlayerIndex >= 0 && selectedPlayerIndex < static_cast<int>(gameState.players.size())) {
+            Player& selectedPlayer = gameState.players[selectedPlayerIndex];
 
             // 位置、大小、色
             ImGui::SliderFloat("X Position", &selectedPlayer.x, 0.0f, 1280.0f);
@@ -78,40 +116,37 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
                     static_cast<int>(color[3] * 255);
             }
         }
-        //戻す
-        if (keys[DIK_LEFT]) {
-            stateManager.UndoState(entities, 5);
+        ImGui::End();
+
+
+        ///
+        /// ↑更新処理ここまで
+        ///
+
+        ///
+        /// ↓描画処理ここから
+        ///
+
+        for (const auto& player : gameState.players) {
+            player.Draw();
         }
-        //早く送る
-        if (keys[DIK_RIGHT]) {
-            stateManager.RedoState(entities, 5);
+        for (const auto& enemy : gameState.enemies) {
+            enemy.Draw();
         }
+        ///
+        /// ↑描画処理ここまで
+        ///
 
-       
-		///
-		/// ↑更新処理ここまで
-		///
-		
-		///
-		/// ↓描画処理ここから
-		///
-         for (const auto& entity : entities) {
-            entity.Draw();
+        // フレームの終了
+        Novice::EndFrame();
+
+        // ESCキーが押されたらループを抜ける
+        if (preKeys[DIK_ESCAPE] == 0 && keys[DIK_ESCAPE] != 0) {
+            break;
         }
-		///
-		/// ↑描画処理ここまで
-		///
+    }
 
-		// フレームの終了
-		Novice::EndFrame();
-
-		// ESCキーが押されたらループを抜ける
-		if (preKeys[DIK_ESCAPE] == 0 && keys[DIK_ESCAPE] != 0) {
-			break;
-		}
-	}
-
-	// ライブラリの終了
-	Novice::Finalize();
-	return 0;
+    // ライブラリの終了
+    Novice::Finalize();
+    return 0;
 }

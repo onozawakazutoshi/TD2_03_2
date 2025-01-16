@@ -6,7 +6,7 @@ GameStateManager<T>::GameStateManager(int maxFrames) : maxHistory(maxFrames) {}
 
 // 現在の状態を履歴に保存する
 template <typename T>
-void GameStateManager<T>::SaveState(const std::vector<T>& entities) {
+void GameStateManager<T>::SaveState(const T& entities) {
     // 最大履歴数を超えた場合は最古の状態を削除する
   /*  if (history.size() >= maxHistory) {
         history.pop_front();
@@ -16,7 +16,7 @@ void GameStateManager<T>::SaveState(const std::vector<T>& entities) {
 
 // 指定したフレーム分だけ状態を巻き戻す
 template <typename T>
-void GameStateManager<T>::UndoState(std::vector<T>& entities, int frames) {
+void GameStateManager<T>::UndoState(T& entities, int frames) {
     if (!history.empty()) {
         if (history.size() <= frames) {
             // 全て巻き戻す場合
@@ -36,7 +36,7 @@ void GameStateManager<T>::UndoState(std::vector<T>& entities, int frames) {
 // 指定したフレーム分だけ状態を早送りする
 // 巻き戻すしたら
 template <typename T>
-void GameStateManager<T>::RedoState(std::vector<T>& entities, int frames) {
+void GameStateManager<T>::RedoState(T& entities, int frames) {
     if (!fastForwardHistory.empty()) {
         if (fastForwardHistory.size() <= frames) {
             // 全て早送りする場合
@@ -54,4 +54,4 @@ void GameStateManager<T>::RedoState(std::vector<T>& entities, int frames) {
 }
 
 // 明示的インスタンス化: Player型のテンプレートクラスを生成
-template class GameStateManager<Player>;
+template class GameStateManager<GameState>;//まとめ時gameSence変えばいい
