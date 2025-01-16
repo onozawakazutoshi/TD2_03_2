@@ -46,6 +46,13 @@ public: // メンバ関数
 	// imgui
 	void RenderUI();
 
+	int MapDataSizeWidth() {
+		return mapData_.Width;
+	}
+	int MapDataSizeHeight() {
+		return mapData_.Height;
+	}
+
 private: // メンバ変数
 	// マップデータ
 	Map::MapData mapData_;

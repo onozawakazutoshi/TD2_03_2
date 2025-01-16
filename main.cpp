@@ -37,7 +37,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓更新処理ここから
 		///
-		enemy->Updete();
+		
 
 
 		///
@@ -55,14 +55,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// フレームの終了
 		Novice::EndFrame();
 
-	// 初期化
-	GameScene* gamescene = new GameScene();	
-	gamescene->Initialize();
-	
-	// 全ての処理
-	gamescene->UpdateDraw();
+		// 初期化
+		GameScene* gamescene = new GameScene();
+		gamescene->Initialize();
+		
+		enemy->Updete();
 
-	// ライブラリの終了
-	Novice::Finalize();
-	return 0;
+		// 全ての処理
+		gamescene->UpdateDraw();
+	}
+
+		// ライブラリの終了
+		Novice::Finalize();
+		return 0;
+	
 }

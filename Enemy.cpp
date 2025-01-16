@@ -1,6 +1,12 @@
 #include "Enemy.h"
 #include "math.h"
 
+//void Enemy::Initialize(int Width,int Height)
+//{
+//	//X = Width;
+//
+//}
+
 void Enemy::Updete()
 {
 	int startpos[2];

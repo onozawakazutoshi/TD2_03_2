@@ -10,19 +10,20 @@ struct roadData {
 class Enemy
 {
 public:
+	void Initialize(int Width, int Height);
 	void Updete();
 	void Road(int count);
 
 private:
-	const int X = 5;
-	const int Y = 5;
+	static const int X = 50;
+	static const int Y = 50;
 
-	int m[5][5] =
+	int m[X][Y] =
 	{
 		{10, 0, 0, 0, 0},
-		{ 0, 0, 0, 0, 0},
-		{ 0, 0, 0, 0, 0},
-		{ 0, 0, 0, 0, 0},
+		{ 0, 0, 0, 1, 0},
+		{ 0, 0, 0, 1, 0},
+		{ 0, 1, 1, 1, 0},
 		{ 0, 0, 0, 0,20}
 	};
 	bool goflag = false;
