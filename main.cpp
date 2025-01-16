@@ -18,15 +18,28 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // ゲームの状態を管理するオブジェクト
     GameState gameState;
     gameState.players; // プレイヤーリスト
-    gameState.enemies = { Enemy(500.0f, 360.0f, 50.0f, 50.0f, RED) }; // 敵の初期設定
+    gameState.enemies = { Enemy(1000.0f, 360.0f, 50.0f, 50.0f, RED) }; // 敵の初期設定
     GameStateManager<GameState> stateManager(0); // 状態管理
 
     float enemySpeed = 5.0f; // 敵の移動速度
 
     int selectedPlayerIndex = -1; // 選択中のプレイヤーのインデックス
 
-    bool isPaused = false; // ゲームが一時停止中かどうか
+    bool isPaused = true; // ゲームが一時停止中かどうか
 
+    int fastTexture = Novice::LoadTexture("fast.png");
+    int retreatTexture = Novice::LoadTexture("retreat.png");
+    int stopTexture = Novice::LoadTexture("stop.png");
+    int startTexture = Novice::LoadTexture("start.png");
+    //画像
+    const int buttonWidth = 64;
+    const int buttonHeight = 52;
+    const int fastButtonX = 700;
+    const int fastButtonY = 650;
+    const int retreatButtonX = 500;
+    const int retreatButtonY = 650;
+    const int imageX = 600;
+    const int imageY = 650;
     // ウィンドウの×ボタンが押されるまでループ
     while (Novice::ProcessMessage() == 0) {
         // フレームの開始
@@ -35,7 +48,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         // キー入力を取得
         memcpy(preKeys, keys, 256);
         Novice::GetHitKeyStateAll(keys);
-
+        int mouseX, mouseY;
+        Novice::GetMousePosition(&mouseX, &mouseY);
         ///
         /// ↓更新処理ここから
         ///
@@ -52,11 +66,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             // 現在のフレームが0でない場合に敵を移動
             if (stateManager.GetCurrentFrame() != 0) {
                 for (auto& enemy : gameState.enemies) {
-                    enemy.x += enemySpeed; // 敵を右に移動
+                    enemy.x -= enemySpeed; // 敵を右に移動
 
                     // ウィンドウ外に出たら左に戻す
-                    if (enemy.x - enemy.width / 2 > 1280) {
-                        enemy.x = -enemy.width / 2;
+                    if (enemy.x - enemy.width / 2 < 0) {
+                        enemy.x = 1280 + enemy.width / 2;
                     }
                 }
             }
@@ -64,20 +78,33 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
         // マウスの右クリックでプレイヤーを追加
         if (Novice::IsTriggerMouse(1)) {
-            int mouseX, mouseY;
-            Novice::GetMousePosition(&mouseX, &mouseY);
+
 
             gameState.players.emplace_back(static_cast<float>(mouseX), static_cast<float>(mouseY), 50.0f, 50.0f, WHITE);
         }
-
+        if (Novice::IsTriggerMouse(0)) {
+            if (mouseX >= retreatButtonX && mouseX <= retreatButtonX + buttonWidth &&
+                mouseY >= retreatButtonY && mouseY <= retreatButtonY + buttonHeight) {
+                stateManager.UndoState(gameState, 120);
+            }
+            if (mouseX >= fastButtonX && mouseX <= fastButtonX + buttonWidth &&
+                mouseY >= fastButtonY && mouseY <= fastButtonY + buttonHeight) {
+                stateManager.RedoState(gameState, 120);
+            }
+            if (mouseX >= imageX && mouseX <= imageX + buttonWidth &&
+                mouseY >= imageY && mouseY <= imageY + buttonHeight) {
+                isPaused = !isPaused;
+            }
+        }
         // 左矢印キーで状態を戻す
         if (keys[DIK_LEFT]) {
-            stateManager.UndoState(gameState, 5);
+            stateManager.UndoState(gameState, 2);
         }
 
-        // 右矢印キーで状態を進める
+
         if (keys[DIK_RIGHT]) {
-            stateManager.RedoState(gameState, 5);
+            // 右矢印キーで状態を進める
+            stateManager.RedoState(gameState, 2);
         }
 
         // ImGuiを使った状態管理UI
@@ -146,7 +173,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         for (const auto& enemy : gameState.enemies) {
             enemy.Draw();
         }
+        // 绘制回退按钮
+        Novice::DrawSprite(retreatButtonX, retreatButtonY, retreatTexture, 1.0f, 1.0f, 0.0f, WHITE);
 
+        // 绘制快进按钮
+        Novice::DrawSprite(fastButtonX, fastButtonY, fastTexture, 1.0f, 1.0f, 0.0f, WHITE);
+
+        if (isPaused) {
+            Novice::DrawSprite(imageX, imageY, stopTexture, 1.0f, 1.0f, 0.0f, WHITE);
+        }
+        else {
+            Novice::DrawSprite(imageX, imageY, startTexture, 1.0f, 1.0f, 0.0f, WHITE);
+        }
         ///
         /// ↑描画処理ここまで
         ///

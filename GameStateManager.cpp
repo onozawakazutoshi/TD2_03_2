@@ -11,6 +11,9 @@ void GameStateManager<T>::SaveState(const T& entities) {
   /*  if (history.size() >= maxHistory) {
         history.pop_front();
     }*/
+    if (isRestoringState) {
+        return;
+    }
     history.push_back(entities);
 }
 
@@ -18,6 +21,7 @@ void GameStateManager<T>::SaveState(const T& entities) {
 template <typename T>
 void GameStateManager<T>::UndoState(T& entities, int frames) {
     if (!history.empty()) {
+        isRestoringState = true;
         if (history.size() <= frames) {
             // 全て巻き戻す場合
             fastForwardHistory.insert(fastForwardHistory.begin(), history.begin(), history.end());
@@ -30,14 +34,16 @@ void GameStateManager<T>::UndoState(T& entities, int frames) {
             entities = *(startIt - 1);
             history.erase(startIt, history.end());
         }
+        isRestoringState = false;
     }
 }
 
 // 指定したフレーム分だけ状態を早送りする
 // 巻き戻すしたら
-template <typename T>
+template <typename T> 
 void GameStateManager<T>::RedoState(T& entities, int frames) {
     if (!fastForwardHistory.empty()) {
+        isRestoringState = true;
         if (fastForwardHistory.size() <= frames) {
             // 全て早送りする場合
             history.insert(history.end(), fastForwardHistory.begin(), fastForwardHistory.end());
@@ -50,6 +56,7 @@ void GameStateManager<T>::RedoState(T& entities, int frames) {
             entities = *(endIt - 1);
             fastForwardHistory.erase(fastForwardHistory.begin(), endIt);
         }
+        isRestoringState = false;
     }
 }
 

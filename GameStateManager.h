@@ -11,7 +11,7 @@ private:
     std::deque<T> history;          // 過去の状態を保存するデータ構造
     std::deque<T> fastForwardHistory; // 未来の状態を保存するデータ構造
     int maxHistory;                        // 最大履歴数
-
+    bool isRestoringState = false;
 public:
     // コンストラクタ: 最大履歴数を設定
     GameStateManager(int maxFrames);
