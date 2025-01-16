@@ -4,6 +4,7 @@
 template <typename T>
 GameStateManager<T>::GameStateManager(int maxFrames) : maxHistory(maxFrames) {}
 
+
 // 現在の状態を履歴に保存する
 template <typename T>
 void GameStateManager<T>::SaveState(const T& entities) {
@@ -16,6 +17,7 @@ void GameStateManager<T>::SaveState(const T& entities) {
     }
     history.push_back(entities);
 }
+
 
 // 指定したフレーム分だけ状態を巻き戻す
 template <typename T>
@@ -61,4 +63,4 @@ void GameStateManager<T>::RedoState(T& entities, int frames) {
 }
 
 // 明示的インスタンス化: Player型のテンプレートクラスを生成
-template class GameStateManager<GameState>;//まとめ時gameSence変えばいい
+template class GameStateManager<GameState>;
