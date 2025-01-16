@@ -109,7 +109,11 @@ void Map::Initialize() {
 	mouseData_.mousecount = 0;
 	mouseData_.PositionX = 0;
 	mouseData_.PositionY = 0;
-
+	// 開始の描画
+	startspritetile[0] = { 0.0f,0.0f };
+	startspritetile[1] = { 0.0f,32.0f };
+	startspritetile[2] = { 32.0f,0.0f };
+	startspritetile[3] = { 32.0f,32.0f };
 	// 画像サイズ
 	tilesize = { 32.0f,32.0f };
 }
