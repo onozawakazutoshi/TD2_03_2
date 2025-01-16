@@ -13,10 +13,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// キー入力結果を受け取る箱
 	char keys[256] = {0};
 	char preKeys[256] = {0};
-    std::vector<Player> entities = {
-        Player(640.0f, 360.0f, 50.0f, 50.0f, WHITE), // 玩家
-    };
+	std::vector<Player> entities;
     GameStateManager<Player> stateManager(0);
+
+	 // 当前选中的玩家索引
+    int selectedPlayerIndex = -1;
+
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
 		// フレームの開始
@@ -31,15 +33,56 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
         stateManager.SaveState(entities);
 
-         if (keys[DIK_W]) entities[0].y -= 5.0f;
-        if (keys[DIK_S]) entities[0].y += 5.0f;
-        if (keys[DIK_A]) entities[0].x -= 5.0f;
-        if (keys[DIK_D]) entities[0].x += 5.0f;
+        if (Novice::IsTriggerMouse(1)) {
+            int mouseX, mouseY;
+            Novice::GetMousePosition(&mouseX, &mouseY);
 
+            entities.emplace_back(static_cast<float>(mouseX), static_cast<float>(mouseY), 50.0f, 50.0f, WHITE);
+        }
+		 ImGui::Begin("entities Editor");
+        ImGui::Text("entities: %zu", entities.size());
 
+        // 
+        for (size_t i = 0; i < entities.size(); ++i) {
+            char label[32];
+            snprintf(label, sizeof(label), "entitie %zu", i);
+
+            if (ImGui::Selectable(label, selectedPlayerIndex == static_cast<int>(i))) {
+                selectedPlayerIndex = static_cast<int>(i);
+            }
+        }
+
+        // プレイヤーを選択して
+        if (selectedPlayerIndex >= 0 && selectedPlayerIndex < static_cast<int>(entities.size())) {
+            Player& selectedPlayer = entities[selectedPlayerIndex];
+
+            // 位置、大小、色
+            ImGui::SliderFloat("X Position", &selectedPlayer.x, 0.0f, 1280.0f);
+            ImGui::SliderFloat("Y Position", &selectedPlayer.y, 0.0f, 720.0f);
+            ImGui::SliderFloat("Width", &selectedPlayer.width, 10.0f, 200.0f);
+            ImGui::SliderFloat("Height", &selectedPlayer.height, 10.0f, 200.0f);
+
+            // 色调整（RGBA）
+            float color[4] = {
+                ((selectedPlayer.color >> 24) & 0xFF) / 255.0f,
+                ((selectedPlayer.color >> 16) & 0xFF) / 255.0f,
+                ((selectedPlayer.color >> 8) & 0xFF) / 255.0f,
+                (selectedPlayer.color & 0xFF) / 255.0f,
+            };
+
+            if (ImGui::ColorEdit4("Color", color)) {
+                selectedPlayer.color =
+                    (static_cast<int>(color[0] * 255) << 24) |
+                    (static_cast<int>(color[1] * 255) << 16) |
+                    (static_cast<int>(color[2] * 255) << 8) |
+                    static_cast<int>(color[3] * 255);
+            }
+        }
+        //戻す
         if (keys[DIK_LEFT]) {
             stateManager.UndoState(entities, 5);
         }
+        //早く送る
         if (keys[DIK_RIGHT]) {
             stateManager.RedoState(entities, 5);
         }
