@@ -23,25 +23,26 @@ int GameScene::UpdateDraw(){
         switch (currentState) {
         case SceneState::Title:
 
-            //if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
-            //    currentState = SceneState::Game;
-            //}
 
+            if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
+                //currentState = SceneState::Game;
+            }
             break;
         case SceneState::Game:
-
+            // マップの更新処理
             map_->Update(keys);
-            if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
+            
+            
+            if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
                 // currentState = SceneState::Clear;
             }
-
             break;
         case SceneState::Clear:
 
-            //if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
-            //    currentState = SceneState::Title;
-            //}
 
+            if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
+               // currentState = SceneState::Title;
+            }
             break;
         }
 
@@ -63,7 +64,7 @@ int GameScene::UpdateDraw(){
         case SceneState::Game:
             Novice::ScreenPrintf(0, 0, "Scene : Game");
 
-
+            // マップの描画
             map_->Draw();
 
             break;
