@@ -99,17 +99,14 @@ void Map::Initialize() {
 	mapData_.mapSizes[0] = { 5,5 };
 	mapData_.mapSizes[1] = { 24,7 };
 	mapData_.mapSizes[2] = { 24,7 };
-	// マップを読み込む
 	currentMapFile = mapFiles[0];
+	// マップを読み込む
 	LoadMap(currentMapFile, mapData_.mapSizes[0]);
 	selectedMap = 0;
-
+	// マウスの初期化
 	mouseData_.mousecount = 0;
 	mouseData_.PositionX = 0;
 	mouseData_.PositionY = 0;
-
-
-
 }
 
 void Map::Update(const char* keys) {
@@ -123,15 +120,11 @@ void Map::Update(const char* keys) {
 		//if (selectedMap == 1) {
 		//	SetTileRange(0, 5, 2, 6, 2);
 		//}
-
-	} else {
-		/*if (selectedMap == 0) {
-			SetTileRange(2, 2, 2, 1, 0);
-		}
-		if (selectedMap == 1) {
-			SetTileRange(0, 5, 2, 6, 0);
-		}*/
-
+		//loadMapFlag = true;
+	}
+	if (loadMapFlag) {
+		// マップ読み込み
+		CheckLoadMap(mapFiles[1], mapData_.mapSizes[1]);
 	}
 
 	RenderUI();
@@ -217,9 +210,6 @@ void Map::ClearMap() {
 	mapLoaded = false;
 }
 
-
-
-
 void Map::MouseUpdate() {
 	if (!mapLoaded) {
 		// マップが削除されている場合、マウス操作を無視または無効化
@@ -271,6 +261,8 @@ void Map::MouseUpdate() {
 							// マウスを押している間、処理が行われる
 							// 色を変更
 							mapData_.color[neighborY][neighborX] = RED;
+
+
 							//// プレイヤーの座標を、選択されたセルに基づいて設定
 							//playerpos.x = startX + neighborX * size + size / static_cast<float>(2) - playerradius / static_cast<float>(2);  // X座標を計算
 							//playerpos.y = startY + neighborY * size + size / static_cast<float>(2) - playerradius / static_cast<float>(2);  // Y座標を計算
@@ -299,4 +291,18 @@ bool Map::SetTileRange(int setnumwidth, int setnumheight, int sizeX, int sizeY, 
 		}
 	}
 	return true; // 正常に範囲内の値を設定できた場合は成功を返す
+}
+
+bool Map::CheckLoadMap(const char* File, Vector2 Size) {
+	// フラグがオンの場合のみマップを読み込む
+	if (loadMapFlag) {
+		// 現在のマップファイルとサイズを取得
+		const char* mapFile = File;
+		Vector2 mapSize = Size;
+		// マップをロード
+		LoadMap(mapFile, mapSize);
+		// フラグをリセット
+		return loadMapFlag = false;
+	}
+	return loadMapFlag = false;
 }

@@ -54,9 +54,10 @@ public: // メンバ関数
 	void DrawLine(const int i , const int j);	
 	// imgui
 	void RenderUI();
-
+	// マウスの更新処理
 	void MouseUpdate();
-
+	// マップ呼び出し
+	bool CheckLoadMap(const char* File, KamataEngine::Vector2 Size);
 
 private: // メンバ変数
 	// マップデータ
@@ -74,6 +75,8 @@ private: // メンバ変数
 
 	// 線
 	KamataEngine::Vector2 linePos[MaxMapHeight][MaxMapWidth] = { 0.0f,0.0f };
+	// 読み込みフラグ
+	bool loadMapFlag = false;
 
 public:
 	// setter
