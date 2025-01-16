@@ -93,7 +93,7 @@ private: // メンバ変数
 	// 最大描画サイズ
 	float MaxTiTles = 64.0f;
 	// 開始の描画	
-	KamataEngine::Vector2 startspritetile[4] = { {0.0f,0.0f},{0.0f,32.0f},{32.0f,0.0f},32.0f,32.0f };
+	KamataEngine::Vector2 startspritetile[4] = { {0.0f,0.0f},{0.0f,32.0f},{32.0f,0.0f},{32.0f,32.0f} };
 	// 指定する描画サイズ
 	KamataEngine::Vector2 tilesize{};
 	// 描画モードの列挙型
