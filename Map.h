@@ -46,12 +46,24 @@ public: // メンバ関数
 	// imgui
 	void RenderUI();
 
-	int MapDataSizeWidth() {
+	int* mapData() {
+		return *mapData_.MAP;
+	}
+
+	KamataEngine::Vector2 Getmappos(int i, int j) {
+		return mapData_.Mapposition[i][j];
+
+	}
+	int GetmapsizeW() {
 		return mapData_.Width;
+
 	}
-	int MapDataSizeHeight() {
+	int GetmapsizeH() {
 		return mapData_.Height;
+
 	}
+
+	
 
 private: // メンバ変数
 	// マップデータ

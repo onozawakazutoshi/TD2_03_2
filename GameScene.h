@@ -1,5 +1,6 @@
 #pragma once
 #include"Map.h"
+#include "Enemy.h"
 #include <Novice.h>
 
 // シーンクラス
@@ -27,4 +28,5 @@ private: // メンバ変数
 	SceneState currentState = SceneState::Game;// 初期のシーン
 	// ポインタ
 	Map* map_ = nullptr;
+	Enemy* enemy = new Enemy;
 };

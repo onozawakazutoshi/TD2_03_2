@@ -1,5 +1,8 @@
 #pragma once
 #include<stdio.h>
+#include"Map.h"
+#include<math/Vector2.h>
+#include"KamataEngine.h"
 
 struct roadData {
 	int ispos[2];
@@ -9,27 +12,18 @@ struct roadData {
 
 class Enemy
 {
-public:
-	void Initialize(int Width, int Height);
-	void Updete();
-	void Road(int count);
+
 
 private:
 	static const int X = 50;
-	static const int Y = 50;
+	static const int Y = 7;
 
-	int m[X][Y] =
-	{
-		{10, 0, 0, 0, 0},
-		{ 0, 0, 0, 1, 0},
-		{ 0, 0, 0, 1, 0},
-		{ 0, 1, 1, 1, 0},
-		{ 0, 0, 0, 0,20}
-	};
+	int m[Y][X];
+	
 	bool goflag = false;
-	roadData record[100];
+	roadData record[1000];
 	roadData ima;
-	int copy[5][5];
+	int copy[Y][X];
 
 	int ispos[2];
 
@@ -37,5 +31,24 @@ private:
 	
 	int recordcount=0;
 
-	roadData posrecord[100];
+	roadData posrecord[1000];
+
+	float run = 0;
+
+	Map Map_;
+	
+	int roadMaxcount;
+
+	int count = 0;
+
+	int startpos[2];
+
+public:
+	void Initialize(int* map,Map map_);
+	void Updete();
+	void Road(int count);
+	void Drow();
+
+
+	static int saiki_num;
 };

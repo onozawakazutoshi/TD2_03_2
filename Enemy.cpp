@@ -1,5 +1,8 @@
 #include "Enemy.h"
 #include "math.h"
+#include "Novice.h"
+#include<math/Vector2.h>
+#include"KamataEngine.h"
 
 //void Enemy::Initialize(int Width,int Height)
 //{
@@ -7,19 +10,45 @@
 //
 //}
 
+void Enemy::Initialize(int *map, Map map_)
+{
+	for (int i = 0;i < Y;i++) {
+		for (int j = 0;j < X;j++) {
+			m[i][j] = *(map+j+i*X);
+		}
+	}
+	Map_ = map_;
+	goflag = false;
+	
+	copy[Y][X] = NULL;
+
+	ispos[2] = NULL;
+
+	golepos[2] = NULL;
+
+	recordcount = 0 ;
+
+	posrecord[100];
+
+	run = 0;
+
+	roadMaxcount = NULL;
+	count=0;
+}
+
 void Enemy::Updete()
 {
-	int startpos[2];
+	
 	//int copy[5][5];
-	int count=0;
+	
 
-	for (int i = 0;i < 5;i++) {
-		for (int j = 0;j < 5;j++) {
+	for (int i = 0;i < Y;i++) {
+		for (int j = 0;j < X;j++) {
 			copy[i][j] = m[i][j];
 		}
 	}
-	for (int i = 0;i < 5;i++) {
-		for (int j = 0;j < 5;j++) {
+	for (int i = 0;i < Y;i++) {
+		for (int j = 0;j < X;j++) {
 			if (m[i][j] == 10) {
 				startpos[0] = i;
 				startpos[1] = j;
@@ -40,41 +69,48 @@ void Enemy::Updete()
 	//}
 }
 
-void Enemy::Road(int count)
+
+int Enemy::saiki_num = 0;
+void Enemy::Road(int Count)
 {
-	if (copy[record[count].ispos[0]][record[count].ispos[1]] != 20) {
+	saiki_num++;
+	if (copy[record[1].ispos[0]][record[1].ispos[1]] != 20) {
 		///行けるかどうかの判定+スコアつけ
-		if (record[count].ispos[0] - 1 >= 0 && copy[ispos[0] - 1][ispos[1]] != 1) {
+		if (ispos[0] - 1 >= 0 && copy[ispos[0] - 1][ispos[1]] != 1) {
 			recordcount++;
 			record[recordcount].ispos[0] = ispos[0] - 1;
 			record[recordcount].ispos[1] = ispos[1];
 			record[recordcount].backpos[0] = ispos[0];
 			record[recordcount].backpos[1] = ispos[1];
-			record[recordcount].score = (int)(sqrt((golepos[0] - record[recordcount].ispos[0]- 1) * (golepos[0] - record[recordcount].ispos[0] - 1)) + (int)sqrt((golepos[1] - record[recordcount].ispos[1]) * (golepos[1] - record[recordcount].ispos[1])));
+			record[recordcount].score = (int)(sqrt((golepos[0] - record[recordcount].ispos[0]- 1) * (golepos[0] - record[recordcount].ispos[0] - 1)) + (int)sqrt((golepos[1] - record[recordcount].ispos[1]) * (golepos[1] - record[recordcount].ispos[1])))
+				+ (int)(sqrt((startpos[0] - record[recordcount].ispos[0] - 1) * (startpos[0] - record[recordcount].ispos[0] - 1)) + (int)sqrt((startpos[1] - record[recordcount].ispos[1]) * (startpos[1] - record[recordcount].ispos[1])))+Count;
 		}
-		if (record[count].ispos[0] + 1 < 5 && copy[record[count].ispos[0] + 1][record[count].ispos[1]] != 1) {
+		if (ispos[0] + 1 < Map_.GetmapsizeH() && copy[record[1].ispos[0] + 1][record[1].ispos[1]] != 1) {
 			recordcount++;
 			record[recordcount].ispos[0] = ispos[0] + 1;
 			record[recordcount].ispos[1] = ispos[1];
 			record[recordcount].backpos[0] = ispos[0];
 			record[recordcount].backpos[1] = ispos[1];
-			record[recordcount].score = (int)sqrt((golepos[0] - record[recordcount].ispos[0 ]+ 1) * (golepos[0] - record[recordcount].ispos[0 ])+ 1) + (int)sqrt((golepos[1] - record[recordcount].ispos[1]) * (golepos[1] - record[recordcount].ispos[1]));
+			record[recordcount].score = (int)sqrt((golepos[0] - record[recordcount].ispos[0 ]+ 1) * (golepos[0] - record[recordcount].ispos[0 ])+ 1) + (int)sqrt((golepos[1] - record[recordcount].ispos[1]) * (golepos[1] - record[recordcount].ispos[1]))
+				+ (int)sqrt((startpos[0] - record[recordcount].ispos[0] + 1) * (startpos[0] - record[recordcount].ispos[0]) + 1) + (int)sqrt((startpos[1] - record[recordcount].ispos[1]) * (startpos[1] - record[recordcount].ispos[1])) + Count;
 		}
-		if (record[count].ispos[1] - 1 >= 0 && copy[record[count].ispos[0]][record[count].ispos[1] - 1] != 1) {
+		if (ispos[1] - 1 >= 0 && copy[record[1].ispos[0]][record[1].ispos[1] - 1] != 1) {
 			recordcount++;
 			record[recordcount].ispos[0] = ispos[0];
 			record[recordcount].ispos[1] = ispos[1] - 1;
 			record[recordcount].backpos[0] = ispos[0];
 			record[recordcount].backpos[1] = ispos[1];
-			record[recordcount].score = (int)sqrt((golepos[0] - record[recordcount].ispos[0]) * (golepos[0] - record[recordcount].ispos[0])) + (int)sqrt((golepos[1] - record[recordcount].ispos[1 ]- 1) * (golepos[1] - record[recordcount].ispos[1] - 1));
+			record[recordcount].score = (int)sqrt((golepos[0] - record[recordcount].ispos[0]) * (golepos[0] - record[recordcount].ispos[0])) + (int)sqrt((golepos[1] - record[recordcount].ispos[1 ]- 1) * (golepos[1] - record[recordcount].ispos[1] - 1))
+				+ (int)sqrt((startpos[0] - record[recordcount].ispos[0]) * (startpos[0] - record[recordcount].ispos[0])) + (int)sqrt((startpos[1] - record[recordcount].ispos[1] - 1) * (startpos[1] - record[recordcount].ispos[1] - 1)) + Count;
 		}
-		if (record[count].ispos[1] + 1 < 5 && copy[record[count].ispos[0]][record[count].ispos[1] + 1] != 1) {
+		if (ispos[1] + 1 < Map_.GetmapsizeW() && copy[record[1].ispos[0]][record[1].ispos[1] + 1] != 1) {
 			recordcount++;
 			record[recordcount].ispos[0] =ispos[0];
 			record[recordcount].ispos[1] = ispos[1] + 1;
 			record[recordcount].backpos[0] = ispos[0];
 			record[recordcount].backpos[1] = ispos[1];
-			record[recordcount].score = (int)sqrt((golepos[0] - record[recordcount].ispos[0]) * (golepos[0] - record[recordcount].ispos[0])) + (int)sqrt((golepos[1] - record[recordcount].ispos[1 ]+ 1) * (golepos[1] - record[recordcount].ispos[1] + 1));
+			record[recordcount].score = (int)sqrt((golepos[0] - record[recordcount].ispos[0]) * (golepos[0] - record[recordcount].ispos[0])) + (int)sqrt((golepos[1] - record[recordcount].ispos[1 ]+ 1) * (golepos[1] - record[recordcount].ispos[1] + 1))
+				+ (int)sqrt((startpos[0] - record[recordcount].ispos[0]) * (startpos[0] - record[recordcount].ispos[0])) + (int)sqrt((startpos[1] - record[recordcount].ispos[1] + 1) * (startpos[1] - record[recordcount].ispos[1] + 1)) + Count;
 		}
 
 		///
@@ -86,7 +122,7 @@ void Enemy::Road(int count)
 
 		for (int i = 1;i < recordcount;i++) {
 			for (int j = 1;j < recordcount;j++) {
-				if (record[i].score > record[j].score) {
+				if (record[i].score < record[j].score) {
 					roadData a = record[i];
 					record[i] = record[j];
 					record[j] = a;
@@ -95,21 +131,26 @@ void Enemy::Road(int count)
 		}
 		
 		copy[ispos[0]][ispos[1]] = 1;
-		ispos[0] = record[recordcount].ispos[0];
-		ispos[1] = record[recordcount].ispos[1];
+		ispos[0] = record[1].ispos[0];
+		ispos[1] = record[1].ispos[1];
 		
 		// record[recordcount] = ima;
-		count  = recordcount;
+		Count  = recordcount;
 		//recordcount--;
 		
 		
-		Road(count);
+		Road(Count);
 
 	}
-	posrecord[0] = record[recordcount];
-	posrecord[0] = record[recordcount];
+	
+	for (int j = 0;j < recordcount;j++) {
+		if (ispos[0] == record[j].ispos[0] && ispos[1] == record[j].ispos[1]) {
+			posrecord[0] = record[j];
+		}
+	}
 	for (int i=0;;) {
 		if (m[posrecord[i].ispos[0]][posrecord[i].ispos[1]] == 10) {
+			roadMaxcount = i;
 			break;
 		}
 		else {
@@ -118,8 +159,24 @@ void Enemy::Road(int count)
 					i++;
 					posrecord[i] = record[j];
 				}
+				if (m[posrecord[i].ispos[0]][posrecord[i].ispos[1]] == 10) {
+					break;
+				}
 			}
 		}
+	}
+}
+
+void Enemy::Drow()
+{
+	Novice::DrawEllipse((int)Map_.Getmappos(posrecord[roadMaxcount-(int)run].ispos[0], posrecord[roadMaxcount-(int)run].ispos[1]).x+16, (int)Map_.Getmappos(posrecord[roadMaxcount-(int)run].ispos[0], posrecord[roadMaxcount-(int)run].ispos[1]).y+16
+		,5,5,0.0f,0xFF0000FF,kFillModeSolid);
+
+	if (run < roadMaxcount+0.9) {
+		run += 0.01f;
+	}
+	else {
+		run = 0;
 	}
 }
 

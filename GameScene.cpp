@@ -3,7 +3,8 @@
 void GameScene::Initialize() {	
     map_ = new Map();
 	map_->Initialize();
-
+    enemy->Initialize(map_->mapData(),*map_);
+    enemy->Updete();
 }
 
 int GameScene::UpdateDraw(){
@@ -31,6 +32,12 @@ int GameScene::UpdateDraw(){
         case SceneState::Game:
 
             map_->Update(keys);
+            if (keys[DIK_R] && !preKeys[DIK_R]) {
+                Enemy::saiki_num = 0;
+                enemy->Initialize(map_->mapData(), *map_);
+                enemy->Updete();
+           }
+            
             if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
                 // currentState = SceneState::Clear;
             }
@@ -65,7 +72,7 @@ int GameScene::UpdateDraw(){
 
 
             map_->Draw();
-
+            enemy->Drow();
             break;
         case SceneState::Clear:
             Novice::ScreenPrintf(0, 0, "Scene : Clear");

@@ -116,7 +116,6 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="GameScene.cpp" />
-    <ClCompile Include="MapData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\DirectXGame\3d\Camera.h" />
@@ -149,7 +148,6 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     <ClInclude Include="Map.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="Enemy.h" />
-    <ClInclude Include="MapData.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
