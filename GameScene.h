@@ -1,9 +1,6 @@
 #pragma once
 #include <Novice.h>
-#include "GameState.h"
-#include"GameStateManager.h"
-#include "Player.h"
-#include "Enemy.h"
+#include "Map.h"
 
 // シーンクラス
 class GameScene
@@ -26,12 +23,6 @@ public: // メンバ関数
 	// 更新と描画の処理
 	int UpdateDraw();
 
-	// 更新処理
-	void Update();
-
-	// 描画処理
-	void Draw();
-
 private: // メンバ変数
 	// キー入力結果を保存する配列
 	char keys[256] = { 0 };
@@ -41,20 +32,6 @@ private: // メンバ変数
 	// シーンの現在の状態
 	SceneState currentState = SceneState::Game; // 初期シーンの設定
 
-	GameState gameState;         // ゲームの状態
-	GameStateManager<GameState> stateManager; // 状態管理
-
-	float enemySpeed = 5.0f;     // 敵の移動速度
-	bool isPaused = true;        // ゲームが一時停止中かどうか
-	int selectedPlayerIndex = -1; // 選択中のプレイヤーのインデックス
-
-	// ボタンのリソースと位置
-	int fastTexture, retreatTexture, stopTexture, startTexture;
-	const int buttonWidth = 64, buttonHeight = 52;
-	const int fastButtonX = 700, fastButtonY = 650;
-	const int retreatButtonX = 500, retreatButtonY = 650;
-	const int imageX = 600, imageY = 650;
-
-	// キーが押されたかどうかを判定する関数
-	bool IsKeyTriggered(int key);
+	// ポインタ
+	Map* map_ = nullptr;
 };

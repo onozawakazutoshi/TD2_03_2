@@ -1,5 +1,5 @@
 #include "GameStateManager.h"
-
+#include"Map.h"
 // コンストラクタ: 最大履歴数を初期化
 template <typename T>
 GameStateManager<T>::GameStateManager(int maxFrames) : maxHistory(maxFrames) {}
@@ -15,6 +15,8 @@ void GameStateManager<T>::SaveState(const T& entities) {
     if (isRestoringState) {
         return;
     }
+    T savedState = entities;
+    //savedState.currentMap = map->GetMapData();
     history.push_back(entities);
 }
 
