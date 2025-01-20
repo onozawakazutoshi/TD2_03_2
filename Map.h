@@ -63,6 +63,10 @@ public: // メンバ関数
 
 	}
 
+	bool getmapLoaded() {
+		return mapLoaded;
+	}
+
 	
 
 private: // メンバ変数

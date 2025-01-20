@@ -32,7 +32,7 @@ int GameScene::UpdateDraw(){
         case SceneState::Game:
 
             map_->Update(keys);
-            if (keys[DIK_R] && !preKeys[DIK_R]) {
+            if (!map_->getmapLoaded()) {
                 Enemy::saiki_num = 0;
                 enemy->Initialize(map_->mapData(), *map_);
                 enemy->Updete();
