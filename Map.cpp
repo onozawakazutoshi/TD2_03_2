@@ -57,16 +57,17 @@ void Map::MapDataInitialize() {
 	// マップチップサイズ
 	mapData_.size = 32;
 	// マップチップの開始地点
-	mapData_.Mapstart.x = (1280.0f / 2.0f) - ((mapData_.Width * mapData_.size) / 2.0f);
-	mapData_.Mapstart.y = (720.0f / 2.0f) - ((mapData_.Height * mapData_.size) / 2.0f);
+	Mapstart = { (1280.0f / 2.0f) - ((mapData_.Width * mapData_.size) / 2.0f), (720.0f / 2.0f) - ((mapData_.Height * mapData_.size) / 2.0f) };
 	// マップチップの座標
 	for (int i = 0; i < mapData_.Height; i++) {
 		for (int j = 0; j < mapData_.Width; j++) {
-			mapData_.Mapposition[i][j] = { mapData_.Mapstart.x + j * mapData_.size, mapData_.Mapstart.y + i * mapData_.size };
+			mapData_.Mapposition[i][j] = { Mapstart.x + j * mapData_.size, Mapstart.y + i * mapData_.size };
 		}
 	}
 	// 色をつける
 	ColorMapping();
+
+	PlaceEnemyAtPosition(mapData_, enemypos_, enemysize_, 1, 1);
 }
 
 // マップカラー
@@ -116,11 +117,41 @@ void Map::Initialize() {
 	startspritetile[3] = { 32.0f,32.0f };
 	// 画像サイズ
 	tilesize = { 32.0f,32.0f };
+
 }
 
-void Map::Update(const char* keys) {
+void Map::Update(const char* keys, const char* preKeys) {
 	// マウスの更新処理
 	MouseUpdate();
+
+	// 現在のプレイヤーのマップ上の座標を計算
+	int currentMapX = static_cast<int>(enemypos_.x) / mapData_.size;
+	int currentMapY = static_cast<int>(enemypos_.y) / mapData_.size;
+
+	// 移動先のマップ座標を計算
+	if (preKeys[DIK_D] != 0 && keys[DIK_D] == 0) { // 右移動
+		targetMapX = currentMapX + 1;
+		// 移動量を敵の位置に加算
+		enemypos_.x += mapData_.size;
+	}
+
+	if (preKeys[DIK_A] != 0 && keys[DIK_A] == 0) { // 左移動
+		targetMapX = currentMapX - 1;
+		// 移動量を敵の位置に減算
+		enemypos_.x -= mapData_.size;
+	}
+
+	if (preKeys[DIK_W] != 0 && keys[DIK_W] == 0) { // 上移動
+		targetMapY = currentMapY - 1;
+		// 移動量を敵の位置に減算
+		enemypos_.y -= mapData_.size;
+	}
+
+	if (preKeys[DIK_S] != 0 && keys[DIK_S] == 0) { // 下移動
+		targetMapY = currentMapY + 1;
+		// 移動量を敵の位置に加算
+		enemypos_.y += mapData_.size;
+	}
 
 	if (keys[DIK_SPACE]) {
 		//if (selectedMap == 0) {
@@ -135,6 +166,12 @@ void Map::Update(const char* keys) {
 		// マップ読み込み
 		CheckLoadMap(mapFiles[1], mapData_.mapSizes[1]);
 	}
+
+
+	// 使用例
+	//if (CanMoveToTile(mapData_, 1, 1)){
+	//}
+
 
 	RenderUI();
 }
@@ -161,6 +198,15 @@ void Map::Draw() {
 				DrawLine(i, j);
 			}
 		}
+		Novice::DrawEllipse(
+			int(enemypos_.x), int(enemypos_.y),
+			int(enemysize_.x), int(enemysize_.y),
+			0.0f,
+			RED,
+			kFillModeSolid
+		);
+
+
 		break;
 		case DRAW_SPRITE:
 			// 画像での描画
@@ -232,16 +278,16 @@ void Map::SpriteRectDraw() {
 void Map::DrawLine(const int i, const int j) {
 	//白線
 	Novice::DrawLine(
-		int(mapData_.Mapstart.x) + (int(linePos[0][j].x) + j * int(mapData_.size)),
-		int(mapData_.Mapstart.y) + int(linePos[0][j].y) + 0 * int(mapData_.size),
-		int(mapData_.Mapstart.x) + int(linePos[0][j].x) + j * int(mapData_.size),
-		int(mapData_.Mapstart.y) + int(linePos[0][j].y) + mapData_.Height * int(mapData_.size),
+		int(Mapstart.x) + (int(linePos[0][j].x) + j * int(mapData_.size)),
+		int(Mapstart.y) + int(linePos[0][j].y) + 0 * int(mapData_.size),
+		int(Mapstart.x) + int(linePos[0][j].x) + j * int(mapData_.size),
+		int(Mapstart.y) + int(linePos[0][j].y) + mapData_.Height * int(mapData_.size),
 		BLACK);
 	Novice::DrawLine(
-		int(mapData_.Mapstart.x) + int(linePos[i][0].x) + 0 * int(mapData_.size),
-		int(mapData_.Mapstart.y) + int(linePos[i][0].y) + i * int(mapData_.size),
-		int(mapData_.Mapstart.x) + int(linePos[i][0].x) + mapData_.Width * int(mapData_.size),
-		int(mapData_.Mapstart.y) + int(linePos[i][0].y) + i * int(mapData_.size),
+		int(Mapstart.x) + int(linePos[i][0].x) + 0 * int(mapData_.size),
+		int(Mapstart.y) + int(linePos[i][0].y) + i * int(mapData_.size),
+		int(Mapstart.x) + int(linePos[i][0].x) + mapData_.Width * int(mapData_.size),
+		int(Mapstart.y) + int(linePos[i][0].y) + i * int(mapData_.size),
 		BLACK);
 }
 
@@ -312,8 +358,8 @@ void Map::MouseUpdate() {
 	Novice::GetMousePosition(&mouseData_.PositionX, &mouseData_.PositionY);
 
 	// マウスの座標から選択中のマスを判定
-	int selectedX = (mouseData_.PositionX - int(mapData_.Mapstart.x)) / mapData_.size; // 列番号
-	int selectedY = (mouseData_.PositionY - int(mapData_.Mapstart.y)) / mapData_.size; // 行番号
+	int selectedX = (mouseData_.PositionX - int(Mapstart.x)) / mapData_.size; // 列番号
+	int selectedY = (mouseData_.PositionY - int(Mapstart.y)) / mapData_.size; // 行番号
 
 	if (selectedX >= 0 && selectedX < mapData_.Width &&
 		selectedY >= 0 && selectedY < mapData_.Height) {
@@ -378,4 +424,26 @@ bool Map::CheckLoadMap(const char* File, Vector2 Size) {
 		return loadMapFlag = false;
 	}
 	return loadMapFlag = false;
+}
+
+
+void Map::PlaceEnemyAtPosition(MapData& mapData, KamataEngine::Vector2& enemypos, KamataEngine::Vector2& enemysize, int mapX, int mapY) {
+	// マップチップ番号を確認
+	if (mapData.MAP[mapY][mapX] == 0) {
+		// マップチップの座標を取得
+		KamataEngine::Vector2 tilePosition = mapData.Mapposition[mapY][mapX];
+		// 敵の位置をマップチップの中心に設定
+		enemypos.x = tilePosition.x + (mapData .size / 2.0f);
+		enemypos.y = tilePosition.y + (mapData .size / 2.0f);
+		// 敵のサイズをマップチップのサイズに設定s
+		enemysize = { 14.0f,14.0f };
+	}
+}
+bool Map::CanMoveToTile(const MapData& mapData, int mapX, int mapY) {
+	// マップの範囲外をチェック
+	if (mapX < 0 || mapX >= mapData.Width || mapY < 0 || mapY >= mapData.Height) {
+		return false;
+	}
+	// 移動可能なタイル (0番) かどうかを確認
+	return mapData.MAP[mapY][mapX] == 0;
 }

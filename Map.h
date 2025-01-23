@@ -21,7 +21,6 @@ public: // メンバ関数
 		int size; 		                        	                        // マップチップのサイズ
 		unsigned int color[MaxMapHeight][MaxMapWidth]{};            		// マップチップのカラー
 		KamataEngine::Vector2 Mapposition[MaxMapHeight][MaxMapWidth]{};		// マップチップの座標
-		KamataEngine::Vector2 Mapstart;		                                // マップチップの開始座標
 	};
 	// マウスデータ
 	struct MouseData {
@@ -33,7 +32,7 @@ public: // メンバ関数
 	// 初期化
 	void Initialize();
 	// 更新処理
-	void Update(const char* keys);
+	void Update(const char* keys, const char* preKeys);
 	// 描画処理
 	void Draw();
 	// マウスの更新処理
@@ -59,6 +58,9 @@ private:
 	void RenderUI();
 
 
+	void PlaceEnemyAtPosition(MapData& mapData, KamataEngine::Vector2& enemypos, KamataEngine::Vector2& enemysize, int mapX, int mapY);
+	bool CanMoveToTile(const MapData& mapData, int mapX, int mapY);
+
 private: // メンバ変数
 	// マップデータ
 	Map::MapData mapData_;
@@ -76,6 +78,8 @@ private: // メンバ変数
 	};
 	// マップ選択
 	int selectedMap;
+	// マップチップの開始座標
+	KamataEngine::Vector2 Mapstart;
 	// マウスデータ
 	MouseData mouseData_;
 
@@ -104,6 +108,16 @@ private: // メンバ変数
 	};
 	// 現在の描画モードを保持する変数
 	int currentDrawMode = DRAW_BOX;
+
+
+
+
+	KamataEngine::Vector2 enemypos_{};
+	KamataEngine::Vector2 enemysize_{};
+
+	// 移動先のマップ座標を計算
+	int targetMapX =0;
+	int targetMapY =0;
 
 public:
 	// setter

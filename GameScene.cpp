@@ -30,7 +30,7 @@ int GameScene::Update(){
             break;
         case SceneState::Game:
             // マップの更新処理
-            map_->Update(keys);
+            map_->Update(keys, preKeys);
             
             
             if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
