@@ -12,6 +12,11 @@ public: // メンバ関数
 	static const int MaxMapWidth = 50;
 	static const int MaxMapHeight = 7;
 
+	// マップ選択
+	enum TileType {
+		Ground = 0,
+		Wall = 1,
+		Wall2 = 2,
 	struct DrawQuad {
 		KamataEngine::Vector2 topLeft;        // 左上の頂点
 		KamataEngine::Vector2 topRight;       // 右上の頂点
@@ -28,6 +33,7 @@ public: // メンバ関数
 		int size; 		                        	                        // マップチップのサイズ
 		unsigned int color[MaxMapHeight][MaxMapWidth]{};            		// マップチップのカラー
 		KamataEngine::Vector2 Mapposition[MaxMapHeight][MaxMapWidth]{};		// マップチップの座標
+		KamataEngine::Vector2 Mapstart;		                                // マップチップの開始座標
 	};
 	// マウスデータ
 	struct MouseData {
@@ -64,9 +70,30 @@ private:
 	// imgui関連
 	void RenderUI();
 
+	int* mapData() {
+		return *mapData_.MAP;
+	}
+
+	KamataEngine::Vector2 Getmappos(int i, int j) {
+		return mapData_.Mapposition[i][j];
+
+	}
+	int GetmapsizeW() {
+		return mapData_.Width;
+
+	}
+	int GetmapsizeH() {
+		return mapData_.Height;
+
+	}
 
 	void PlaceEnemyAtPosition(MapData& mapData, KamataEngine::Vector2& enemypos, KamataEngine::Vector2& enemysize, int mapX, int mapY);
 	bool CanMoveToTile(const MapData& mapData, int mapX, int mapY);
+	bool getmapLoaded() {
+		return mapLoaded;
+	}
+
+	
 
 private: // メンバ変数
 	// マップデータ

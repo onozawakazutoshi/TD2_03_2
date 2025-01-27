@@ -3,10 +3,11 @@
 void GameScene::Initialize() {	
     map_ = new Map();
 	map_->Initialize();
-
+    enemy->Initialize(map_->mapData(),*map_);
+    enemy->Updete();
 }
 
-int GameScene::Update(){
+int GameScene::UpdateDraw(){
     // ウィンドウの×ボタンが押されるまでループ
     while (Novice::ProcessMessage() == 0) {
         // フレームの開始
@@ -23,25 +24,31 @@ int GameScene::Update(){
         switch (currentState) {
         case SceneState::Title:
 
-            if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
-                //currentState = SceneState::Game;
+            if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
+                currentState = SceneState::Game;
             }
+
             break;
         case SceneState::Game:
-            // マップの更新処理
-            map_->Update(keys, preKeys);
+
+            map_->Update(keys);
+            if (keys[DIK_R] && !preKeys[DIK_R]) {
+                //Enemy::saiki_num = 0;
+                enemy->Initialize(map_->mapData(), *map_);
+                enemy->Updete();
+           }
             
-            
-            if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
+            if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
                 // currentState = SceneState::Clear;
             }
+
             break;
         case SceneState::Clear:
 
-
-            if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
-               // currentState = SceneState::Title;
+            if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
+                currentState = SceneState::Title;
             }
+
             break;
         }
 
@@ -63,9 +70,9 @@ int GameScene::Update(){
         case SceneState::Game:
             Novice::ScreenPrintf(0, 0, "Scene : Game");
 
-            // マップの描画
-            map_->Draw();
 
+            map_->Draw();
+            enemy->Drow();
             break;
         case SceneState::Clear:
             Novice::ScreenPrintf(0, 0, "Scene : Clear");

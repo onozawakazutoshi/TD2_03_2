@@ -39,6 +39,8 @@ bool Map::LoadMap(const char* filePath, Vector2& Sizes) {
 		fscanf_s(fp, "%d,", &mapData_.MAP[(map / mapData_.Width)][(map % mapData_.Width)]) != EOF) {
 		map++;
 	}
+	// 色をつける
+	ColorMapping();
 
 	// ファイルを閉じる
 	fclose(fp);
@@ -102,6 +104,7 @@ void Map::Initialize() {
 	mapData_.mapSizes[0] = { 5,5 };
 	mapData_.mapSizes[1] = { 24,7 };
 	mapData_.mapSizes[2] = { 24,7 };
+	// マップを読み込む
 	currentMapFile = mapFiles[0];
 	// マップを読み込む
 	LoadMap(currentMapFile, mapData_.mapSizes[0]);
@@ -217,7 +220,7 @@ void Map::Draw() {
 			break;
 		}
 	}
-}
+	}
 
 void Map::SpriteDraw() {
 	int resources = 0;
@@ -241,7 +244,7 @@ void Map::SpriteDraw() {
 				0xFFFFFFFF    // 色
 				);
 		}
-	}
+}
 }
 
 void Map::SpriteRectDraw() {
