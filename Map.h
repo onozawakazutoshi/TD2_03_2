@@ -115,6 +115,9 @@ private: // メンバ変数
 	};
 	// 現在の描画モードを保持する変数
 	int currentDrawMode = DRAW_BOX;
+	//マップチップの変換
+	bool mapchipchang=false;
+
 
 
 

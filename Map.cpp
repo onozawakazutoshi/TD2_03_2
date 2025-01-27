@@ -164,7 +164,7 @@ void Map::Update(const char* keys, const char* preKeys) {
 		// マップ読み込み
 		CheckLoadMap(mapFiles[1], mapData_.mapSizes[1]);
 	}
-
+	
 
 	// 使用例
 	//if (CanMoveToTile(mapData_, 1, 1)){
@@ -377,11 +377,13 @@ void Map::MouseUpdate() {
 							// マウスを押している間、処理が行われる
 							// 色を変更
 							mapData_.color[neighborY][neighborX] = RED;
-
+							mapData_.MAP[neighborY][neighborX] = 1;
 
 							//// プレイヤーの座標を、選択されたセルに基づいて設定
 							//playerpos.x = startX + neighborX * size + size / static_cast<float>(2) - playerradius / static_cast<float>(2);  // X座標を計算
 							//playerpos.y = startY + neighborY * size + size / static_cast<float>(2) - playerradius / static_cast<float>(2);  // Y座標を計算
+
+							mapchipchang = true;
 						} else {
 							mouseData_.mousecount = 0;
 						}
