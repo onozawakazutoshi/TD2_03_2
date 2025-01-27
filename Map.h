@@ -12,6 +12,13 @@ public: // メンバ関数
 	static const int MaxMapWidth = 50;
 	static const int MaxMapHeight = 7;
 
+	struct DrawQuad {
+		KamataEngine::Vector2 topLeft;        // 左上の頂点
+		KamataEngine::Vector2 topRight;       // 右上の頂点
+		KamataEngine::Vector2 bottomLeft;     // 左下の頂点
+		KamataEngine::Vector2  bottomRight;   // 右下の頂点
+	};
+
 	// マップデータ
 	struct MapData {
 		int MAP[MaxMapHeight][MaxMapWidth];		        	                // マップのサイズ

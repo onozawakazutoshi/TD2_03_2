@@ -23,7 +23,6 @@ int GameScene::Update(){
         switch (currentState) {
         case SceneState::Title:
 
-
             if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
                 //currentState = SceneState::Game;
             }

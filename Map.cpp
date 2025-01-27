@@ -131,26 +131,24 @@ void Map::Update(const char* keys, const char* preKeys) {
 	// 移動先のマップ座標を計算
 	if (preKeys[DIK_D] != 0 && keys[DIK_D] == 0) { // 右移動
 		targetMapX = currentMapX + 1;
-		// 移動量を敵の位置に加算
-		enemypos_.x += mapData_.size;
 	}
 
 	if (preKeys[DIK_A] != 0 && keys[DIK_A] == 0) { // 左移動
 		targetMapX = currentMapX - 1;
-		// 移動量を敵の位置に減算
-		enemypos_.x -= mapData_.size;
 	}
 
 	if (preKeys[DIK_W] != 0 && keys[DIK_W] == 0) { // 上移動
 		targetMapY = currentMapY - 1;
-		// 移動量を敵の位置に減算
-		enemypos_.y -= mapData_.size;
 	}
 
 	if (preKeys[DIK_S] != 0 && keys[DIK_S] == 0) { // 下移動
 		targetMapY = currentMapY + 1;
-		// 移動量を敵の位置に加算
-		enemypos_.y += mapData_.size;
+	}
+	// 移動先が移動可能なタイルかどうかを確認
+	if (Map::CanMoveToTile(mapData_, targetMapX, targetMapY)) {
+		// タイルが移動可能なら敵の位置を更新
+		enemypos_.x = (targetMapX * mapData_.size + mapData_.size / 2.0f);
+		enemypos_.y = (targetMapY * mapData_.size + mapData_.size / 2.0f);
 	}
 
 	if (keys[DIK_SPACE]) {
@@ -171,7 +169,6 @@ void Map::Update(const char* keys, const char* preKeys) {
 	// 使用例
 	//if (CanMoveToTile(mapData_, 1, 1)){
 	//}
-
 
 	RenderUI();
 }
@@ -199,7 +196,7 @@ void Map::Draw() {
 			}
 		}
 		Novice::DrawEllipse(
-			int(enemypos_.x), int(enemypos_.y),
+			int(enemypos_.x+ Mapstart.x), int(enemypos_.y+ Mapstart.y),
 			int(enemysize_.x), int(enemysize_.y),
 			0.0f,
 			RED,
