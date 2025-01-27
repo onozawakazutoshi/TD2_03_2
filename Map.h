@@ -16,7 +16,9 @@ public: // メンバ関数
 	enum TileType {
 		Ground = 0,
 		Wall = 1,
-		Wall2 = 2,
+		Wall2 = 2
+	};
+
 	struct DrawQuad {
 		KamataEngine::Vector2 topLeft;        // 左上の頂点
 		KamataEngine::Vector2 topRight;       // 右上の頂点
@@ -70,6 +72,7 @@ private:
 	// imgui関連
 	void RenderUI();
 
+public:
 	int* mapData() {
 		return *mapData_.MAP;
 	}
@@ -104,12 +107,7 @@ private: // メンバ変数
 	const char* currentMapFile;
 	// マップがロードされているかどうか
 	bool mapLoaded = false;
-	// マップ選択
-	enum TileType {
-		Ground = 0,
-		Wall = 1,
-		Wall2 = 2,
-	};
+	
 	// マップ選択
 	int selectedMap;
 	// マップチップの開始座標

@@ -1,6 +1,7 @@
 
 #include"GameScene.h"
 #include <Novice.h>
+#include"KamataEngine.h"
 
 
 const char kWindowTitle[] = "学籍番号";
