@@ -173,7 +173,7 @@ void Enemy::Drow()
 		,5,5,0.0f,0xFF0000FF,kFillModeSolid);
 
 	if (run < roadMaxcount+0.9) {
-		run += 0.01f;
+		run += 0.03f;
 	}
 	else {
 		run = 0;
