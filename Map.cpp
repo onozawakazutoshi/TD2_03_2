@@ -270,7 +270,7 @@ void Map::RenderUI() {
 				currentMapFile = mapFiles[selectedMap];
 				LoadMap(mapFiles[selectedMap], mapData_.mapSizes[selectedMap]);
 			}
-
+	
 			// マップデータを表示
 			if (ImGui::CollapsingHeader("Map Data")) {
 				for (int i = 0; i < mapData_.Height; i++) {
