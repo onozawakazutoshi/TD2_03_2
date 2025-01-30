@@ -1,7 +1,8 @@
 #pragma once
 #include <stdio.h>
 #include<math/Vector2.h>
-
+#include "GameStateManager.h"
+#include <array>
 class Map
 {
 public: // メンバ関数
@@ -17,9 +18,10 @@ public: // メンバ関数
 		Wall = 1,
 		Wall2 = 2,
 	};
+		using MapType = std::array<std::array<int, MaxMapWidth>, MaxMapHeight>;
 	// マップデータ
 	struct MapData {
-		int MAP[MaxMapHeight][MaxMapWidth];		        	                // マップのサイズ
+		MapType MAP{};		        	                // マップのサイズ
 		KamataEngine::Vector2 mapSizes[MaxMapCount];	                	// 各マップごとにWidth,Heightを指定
 		int Width = 0;                                 	                    // マップの幅
 		int Height = 0;                        	                            // マップの高さ
@@ -32,7 +34,7 @@ public: // メンバ関数
 	// 初期化
 	void Initialize();
 	// 更新処理
-	void Update(const char* keys);
+	void Update(const char* keys,const char* preKeys);
 	// 描画処理
 	void Draw();
 	// マップ読み込み
@@ -47,8 +49,8 @@ public: // メンバ関数
 	void RenderUI();
 
 	int* mapData() {
-		return *mapData_.MAP;
-	}
+    return mapData_.MAP[0].data();
+}
 
 	KamataEngine::Vector2 Getmappos(int i, int j) {
 		return mapData_.Mapposition[i][j];
@@ -67,11 +69,12 @@ public: // メンバ関数
 		return mapLoaded;
 	}
 
-	
+	void Undo(); // 
+    void Redo(); // 
 
 private: // メンバ変数
 	// マップデータ
-	Map::MapData mapData_;
+	MapData mapData_;
 	// マップチップファルダ
 	const char* mapFiles[MaxMapCount];
 	// 現在のマップファイルパス
@@ -83,4 +86,6 @@ private: // メンバ変数
 
 	// 線
 	KamataEngine::Vector2 linePos[MaxMapHeight][MaxMapWidth] = { 0.0f,0.0f };
+
+	HistoryManager<MapType> historyManager;
 };

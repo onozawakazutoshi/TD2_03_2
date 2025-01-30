@@ -73,12 +73,17 @@ void Map::Initialize() {
 	selectedMap = 0;
 }
 
-void Map::Update(const char* keys) {
+void Map::Update(const char* keys,const char* preKeys) {
 
 	if (keys[DIK_SPACE]) {
 
 	}
-
+	 if (keys[DIK_LEFT]&& !preKeys[DIK_LEFT]) {
+        Undo();
+    }
+    if (keys[DIK_RIGHT]&& !preKeys[DIK_RIGHT]) {
+        Redo();
+    }
 	RenderUI();
 }
 
@@ -169,6 +174,20 @@ void Map::RenderUI() {
 		}
 	}
 	ImGui::End();
+}
+
+void Map::Undo()
+{
+	 if (historyManager.Undo(mapData_.MAP)) {
+        //ColorMapping();
+    }
+}
+
+void Map::Redo()
+{
+	if (historyManager.Redo(mapData_.MAP)) {
+        //ColorMapping();
+    }
 }
 
 void Map::ClearMap() {

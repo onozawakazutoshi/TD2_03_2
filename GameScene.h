@@ -15,6 +15,8 @@ public: // メンバ関数
 		Clear
 	};
 
+		GameScene();  // コンストラクタ
+	~GameScene(); // デストラクタ
 	// 初期化
 	void Initialize();
 	// 更新描画処理

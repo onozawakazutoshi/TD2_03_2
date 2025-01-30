@@ -1,6 +1,11 @@
 #include "GameScene.h"
 
-void GameScene::Initialize() {	
+GameScene::GameScene()
+{
+}
+GameScene::~GameScene() {}
+
+void GameScene::Initialize() {
     map_ = new Map();
 	map_->Initialize();
     enemy->Initialize(map_->mapData(),*map_);
@@ -31,7 +36,7 @@ int GameScene::UpdateDraw(){
             break;
         case SceneState::Game:
 
-            map_->Update(keys);
+            map_->Update(keys,preKeys);
             if (!map_->getmapLoaded()) {
                 Enemy::saiki_num = 0;
                 enemy->Initialize(map_->mapData(), *map_);
