@@ -5,11 +5,11 @@
 
 
 class Map;
-
 struct roadData {
 	int ispos[2];
 	int backpos[2];
 	int score;
+	bool alive = true;
 };
 
 class Enemy
