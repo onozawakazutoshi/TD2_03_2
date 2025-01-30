@@ -3,8 +3,14 @@
 void GameScene::Initialize() {	
     map_ = new Map();
 	map_->Initialize();
-    enemy->Initialize(map_->mapData(),*map_);
-    enemy->Updete();
+
+        Enemy* newEnemy = new Enemy();
+        newEnemy->Initialize(map_->mapData(), *map_);
+         newEnemy->Updete();
+        enemies.push_back(newEnemy);
+    
+  
+    spawnTimer = 0;
 }
 
 int GameScene::UpdateDraw(){
@@ -32,12 +38,19 @@ int GameScene::UpdateDraw(){
         case SceneState::Game:
 
             map_->Update(keys);
-            if (!map_->getmapLoaded()) {
+              spawnTimer++;
+           
                 Enemy::saiki_num = 0;
-                enemy->Initialize(map_->mapData(), *map_);
-                enemy->Updete();
+                if (spawnTimer >= 180) {
+                    Enemy* newEnemy = new Enemy();
+                    newEnemy->Initialize(map_->mapData(), *map_);
+                    newEnemy->Updete();
+                    enemies.push_back(newEnemy);
+                    spawnTimer = 0;
+                
            }
-            
+          Novice::ScreenPrintf(0, 20, "Enemies Count: %d", (int)enemies.size());
+          Novice::ScreenPrintf(0, 40, "spawnTimer: %d", spawnTimer);
             if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
                 // currentState = SceneState::Clear;
             }
@@ -72,7 +85,10 @@ int GameScene::UpdateDraw(){
 
 
             map_->Draw();
-            enemy->Drow();
+            for (auto& enemy : enemies) {
+                    enemy->Drow();
+                }
+            
             break;
         case SceneState::Clear:
             Novice::ScreenPrintf(0, 0, "Scene : Clear");

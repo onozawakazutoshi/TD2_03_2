@@ -176,7 +176,7 @@ void Enemy::Drow()
 		run += 0.01f;
 	}
 	else {
-		run = 0;
+		run = (float)roadMaxcount;
 	}
 }
 

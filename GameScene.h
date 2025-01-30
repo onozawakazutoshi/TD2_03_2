@@ -2,7 +2,7 @@
 #include"Map.h"
 #include "Enemy.h"
 #include <Novice.h>
-
+#include <vector>
 // シーンクラス
 class GameScene
 {
@@ -28,5 +28,7 @@ private: // メンバ変数
 	SceneState currentState = SceneState::Game;// 初期のシーン
 	// ポインタ
 	Map* map_ = nullptr;
-	Enemy* enemy = new Enemy;
+	std::vector<Enemy*> enemies;
+
+	int spawnTimer = 0;
 };
