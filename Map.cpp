@@ -3,6 +3,7 @@
 #include <imgui.h>
 #include <algorithm>
 #include <windows.h>
+#include "Enemy.h"
 #undef min
 #undef max
 
@@ -124,6 +125,9 @@ void Map::Initialize() {
 }
 
 void Map::Update(const char* keys, const char* preKeys) {
+
+	mapchipchang = false;
+
 	// マウスの更新処理
 	MouseUpdate();
 
@@ -375,19 +379,31 @@ void Map::MouseUpdate() {
 					mapData_.color[neighborY][neighborX] = 0xFFFF0000 + 200;
 
 					if (mapData_.MAP[neighborY][neighborX] == 0) {
+						enemy = new Enemy;
 						if (Novice::IsPressMouse(0)) {
+
+
 							mouseData_.mousecount++;
 							// マウスを押している間、処理が行われる
 							// 色を変更
 							mapData_.color[neighborY][neighborX] = RED;
 							mapData_.MAP[neighborY][neighborX] = 1;
+							enemy->Initialize(this);
+							enemy->Updete();
+							if (enemy->GetNotRoad()) {
+								mapData_.color[neighborY][neighborX] = 0xFFFF0000 + 200;
+								mapData_.MAP[neighborY][neighborX] = 0;
+							}
 
 							//// プレイヤーの座標を、選択されたセルに基づいて設定
 							//playerpos.x = startX + neighborX * size + size / static_cast<float>(2) - playerradius / static_cast<float>(2);  // X座標を計算
 							//playerpos.y = startY + neighborY * size + size / static_cast<float>(2) - playerradius / static_cast<float>(2);  // Y座標を計算
 
 							mapchipchang = true;
-						} else {
+
+
+						}
+						else {
 							mouseData_.mousecount = 0;
 						}
 					}

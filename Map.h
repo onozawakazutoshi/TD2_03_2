@@ -3,6 +3,8 @@
 #include<math/Vector2.h>
 #include<Novice.h>
 
+class Enemy;
+
 class Map
 {
 public: // メンバ関数
@@ -73,8 +75,8 @@ private:
 	void RenderUI();
 
 public:
-	int* mapData() {
-		return *mapData_.MAP;
+	int mapData(int i,int j) {
+		return mapData_.MAP[i][j];
 	}
 
 	KamataEngine::Vector2 Getmappos(int i, int j) {
@@ -94,6 +96,9 @@ public:
 	bool CanMoveToTile(const MapData& mapData, int mapX, int mapY);
 	bool getmapLoaded() {
 		return mapLoaded;
+	}
+	bool GetMapchipchang(){
+		return mapchipchang;
 	}
 
 	
@@ -143,16 +148,14 @@ private: // メンバ変数
 	//マップチップの変換
 	bool mapchipchang=false;
 
-
-
-
+	Enemy* enemy;
 
 	KamataEngine::Vector2 enemypos_{};
 	KamataEngine::Vector2 enemysize_{};
 
 	// 移動先のマップ座標を計算
 	int targetMapX =0;
-	int targetMapY =0;
+	int targetMapY = 0;
 
 public:
 	// setter

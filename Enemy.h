@@ -1,8 +1,10 @@
 #pragma once
 #include<stdio.h>
-#include"Map.h"
 #include<math/Vector2.h>
 #include"KamataEngine.h"
+
+
+class Map;
 
 struct roadData {
 	int ispos[2];
@@ -35,7 +37,7 @@ private:
 
 	float run = 0;
 
-	Map Map_;
+	Map* Map_;
 	
 	int roadMaxcount;
 
@@ -43,12 +45,21 @@ private:
 
 	int startpos[2];
 
+	bool NotRoad;
+
+	int backrecordcount = 0;
+
+	int NotRoadcount = 0;
+
 public:
-	void Initialize(int* map,Map map_);
+	void Initialize(Map* map_);
 	void Updete();
 	void Road(int count);
 	void Drow();
 
+	bool GetNotRoad() {
+		return NotRoad;
+	}
 
 	static int saiki_num;
 };

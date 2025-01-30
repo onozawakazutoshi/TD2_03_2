@@ -3,7 +3,7 @@
 void GameScene::Initialize() {	
     map_ = new Map();
 	map_->Initialize();
-    enemy->Initialize(map_->mapData(),*map_);
+    enemy->Initialize(map_);
     enemy->Updete();
 }
 
@@ -32,9 +32,9 @@ int GameScene::UpdateDraw(){
         case SceneState::Game:
 
             map_->Update(keys,preKeys);
-            if (keys[DIK_R] && !preKeys[DIK_R]) {
-                //Enemy::saiki_num = 0;
-                enemy->Initialize(map_->mapData(), *map_);
+            if (map_->GetMapchipchang()) {
+                Enemy::saiki_num = 0;
+                enemy->Initialize(map_);
                 enemy->Updete();
            }
             

@@ -19,6 +19,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//Novice::Initialize(kWindowTitle, windowWidth, windowHeight);
 	Novice::Initialize(kWindowTitle, 1280, 720);
 
+	char keys[256] = { 0 };
+	char preKeys[256] = { 0 };
+
 	// 初期化
 	GameScene* gamescene = new GameScene();
 	gamescene->Initialize();
@@ -53,9 +56,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// フレームの終了
 		Novice::EndFrame();
 
-		// 初期化
-		GameScene* gamescene = new GameScene();
-		gamescene->Initialize();
+		
 		
 		
 
