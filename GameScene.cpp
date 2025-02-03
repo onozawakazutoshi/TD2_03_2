@@ -5,7 +5,7 @@ void GameScene::Initialize() {
 	map_->Initialize();
 
         Enemy* newEnemy = new Enemy();
-        newEnemy->Initialize(map_->mapData(), *map_);
+        newEnemy->Initialize(map_);
          newEnemy->Updete();
         enemies.push_back(newEnemy);
     
@@ -37,24 +37,24 @@ int GameScene::UpdateDraw(){
             break;
         case SceneState::Game:
 
-            map_->Update(keys,preKeys);
+            map_->Update(keys, preKeys);
             if (map_->GetMapchipchang()) {
                 Enemy::saiki_num = 0;
                 if (spawnTimer >= 180) {
                     Enemy* newEnemy = new Enemy();
-                    newEnemy->Initialize(map_->mapData(), *map_);
+                    newEnemy->Initialize(map_);
                     newEnemy->Updete();
                     enemies.push_back(newEnemy);
                     spawnTimer = 0;
-                
-           }
-          Novice::ScreenPrintf(0, 20, "Enemies Count: %d", (int)enemies.size());
-          Novice::ScreenPrintf(0, 40, "spawnTimer: %d", spawnTimer);
-            if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
-                // currentState = SceneState::Clear;
-            }
 
-            break;
+                }
+                Novice::ScreenPrintf(0, 20, "Enemies Count: %d", (int)enemies.size());
+                Novice::ScreenPrintf(0, 40, "spawnTimer: %d", spawnTimer);
+                if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
+                    // currentState = SceneState::Clear;
+                }
+
+                break;
         case SceneState::Clear:
 
             if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
@@ -62,51 +62,53 @@ int GameScene::UpdateDraw(){
             }
 
             break;
-        }
+            }
 
-        //////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////// ↑更新処理ここまで
-        //////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////// ↑更新処理ここまで
+            //////////////////////////////////////////////////////
 
-        //////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////// ↓描画処理ここから
-        //////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////// ↓描画処理ここから
+            //////////////////////////////////////////////////////
 
-        switch (currentState)
-        {
-        case SceneState::Title:
-            Novice::ScreenPrintf(0, 0, "Scene : Title");
-
-
-            break;
-        case SceneState::Game:
-            Novice::ScreenPrintf(0, 0, "Scene : Game");
+            switch (currentState)
+            {
+            case SceneState::Title:
+                Novice::ScreenPrintf(0, 0, "Scene : Title");
 
 
-            map_->Draw();
-            for (auto& enemy : enemies) {
+                break;
+            case SceneState::Game:
+                Novice::ScreenPrintf(0, 0, "Scene : Game");
+
+
+                map_->Draw();
+                for (auto& enemy : enemies) {
                     enemy->Drow();
                 }
-            
-            break;
-        case SceneState::Clear:
-            Novice::ScreenPrintf(0, 0, "Scene : Clear");
+
+                break;
+            case SceneState::Clear:
+                Novice::ScreenPrintf(0, 0, "Scene : Clear");
 
 
-            break;
-        }
-        
-        //////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////// ↑描画処理ここまで
-        //////////////////////////////////////////////////////
+                break;
+            }
 
-        // フレームの終了
-        Novice::EndFrame();
+            //////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////// ↑描画処理ここまで
+            //////////////////////////////////////////////////////
 
-        // ESCキーが押されたらループを抜ける
-        if (preKeys[DIK_ESCAPE] == 0 && keys[DIK_ESCAPE] != 0) {
-            break;
+            // フレームの終了
+            Novice::EndFrame();
+
+            // ESCキーが押されたらループを抜ける
+            if (preKeys[DIK_ESCAPE] == 0 && keys[DIK_ESCAPE] != 0) {
+                break;
+            }
         }
     }
-    return 0;
+        return 0;
+    
 }
