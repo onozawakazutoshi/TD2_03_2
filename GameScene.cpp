@@ -6,13 +6,18 @@ GameScene::GameScene()
 }
 
 // デストラクタ
-GameScene::~GameScene() {}
+GameScene::~GameScene() {
+ delete bgmManager_;
+}
 
 // 初期化処理
 void GameScene::Initialize() {
 
 	 map_ = new Map();
 	map_->Initialize();
+
+	bgmManager_ = new BGMManager();
+    bgmManager_->Initialize();
 }
 
 // 更新と描画処理
@@ -30,6 +35,7 @@ int GameScene::UpdateDraw() {
 		////////////////////// 更新処理 ///////////////////////
 		//////////////////////////////////////////////////////
 
+		bgmManager_->Update(static_cast<int>(currentState));
 		switch (currentState) {
 		case SceneState::Title:
 			// タイトル画面の処理
@@ -40,7 +46,9 @@ int GameScene::UpdateDraw() {
 		case SceneState::Game:
 			  // マップの更新処理
             map_->Update(keys,preKeys);
-		
+			
+			
+            
 			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
 				// currentState = SceneState::Clear;
 			}

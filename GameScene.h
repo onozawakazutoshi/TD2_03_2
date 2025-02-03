@@ -1,6 +1,7 @@
 #pragma once
 #include <Novice.h>
 #include "Map.h"
+#include"BGM.h"
 
 // シーンクラス
 class GameScene
@@ -34,4 +35,6 @@ private: // メンバ変数
 
 	// ポインタ
 	Map* map_ = nullptr;
+	//bgm
+	BGMManager* bgmManager_ = nullptr;
 };
