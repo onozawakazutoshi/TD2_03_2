@@ -1,6 +1,7 @@
 
 #include"GameScene.h"
 #include <Novice.h>
+#include"KamataEngine.h"
 
 
 const char kWindowTitle[] = "学籍番号";
@@ -18,9 +19,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//Novice::Initialize(kWindowTitle, windowWidth, windowHeight);
 	Novice::Initialize(kWindowTitle, 1280, 720);
 
-	// キー入力結果を受け取る箱
-	char keys[256] = {0};
-	char preKeys[256] = {0};
+	char keys[256] = { 0 };
+	char preKeys[256] = { 0 };
+
+	// 初期化
+	GameScene* gamescene = new GameScene();
+	gamescene->Initialize();
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -52,9 +56,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// フレームの終了
 		Novice::EndFrame();
 
-		// 初期化
-		GameScene* gamescene = new GameScene();
-		gamescene->Initialize();
+		
 		
 		
 

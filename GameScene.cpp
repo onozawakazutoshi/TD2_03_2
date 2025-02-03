@@ -37,9 +37,8 @@ int GameScene::UpdateDraw(){
             break;
         case SceneState::Game:
 
-            map_->Update(keys);
-              spawnTimer++;
-           
+            map_->Update(keys,preKeys);
+            if (map_->GetMapchipchang()) {
                 Enemy::saiki_num = 0;
                 if (spawnTimer >= 180) {
                     Enemy* newEnemy = new Enemy();
