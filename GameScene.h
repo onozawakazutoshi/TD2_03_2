@@ -31,7 +31,7 @@ private: // メンバ変数
 	int mouseX = 0, mouseY = 0; // マウスの位置
 
 	// シーンの現在の状態
-	SceneState currentState = SceneState::Game; // 初期シーンの設定
+	SceneState currentState = SceneState::Title; // 初期シーンの設定
 
 	// ポインタ
 	Map* map_ = nullptr;

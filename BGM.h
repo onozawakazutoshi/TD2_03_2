@@ -6,7 +6,7 @@ public:
 
     ~BGMManager();
 
-    void Initialize();
+    void Initialize(int sceneState);
 
     void Update(int sceneState);
 

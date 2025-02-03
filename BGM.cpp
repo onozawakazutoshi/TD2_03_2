@@ -4,13 +4,21 @@ BGMManager::~BGMManager() {
     Novice::StopAudio(gameBgmHandle_);
 }
 
-void BGMManager::Initialize() {
+void BGMManager::Initialize(int sceneState) {
     // 加载背景音乐文件
     gameBgmHandle_ = Novice::LoadAudio("bgm.mp3");
     selectHandle_ = Novice::LoadAudio("select.mp3");
     coinHandle_ = Novice::LoadAudio("coin.mp3");
-
-    playHandle_ = Novice::PlayAudio(gameBgmHandle_, 1, 0.4f);
+    switch (sceneState) {
+    case 0:  // Title 场景
+        break;
+    case 1:  // Game 场景
+       playHandle_ = Novice::PlayAudio(gameBgmHandle_, 1, 0.4f);
+        break;
+    case 2:// Clear 场景
+        break;
+    }
+    
 
 
 }
