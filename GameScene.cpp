@@ -1,19 +1,15 @@
 #include "GameScene.h"
 
-void GameScene::Initialize() {	
+void GameScene::Initialize() {
     map_ = new Map();
-	map_->Initialize();
-
-        Enemy* newEnemy = new Enemy();
-        newEnemy->Initialize(map_);
-         newEnemy->Updete();
-        enemies.push_back(newEnemy);
-    
-  
-    spawnTimer = 0;
+    map_->Initialize();
+    Enemy* newEnemy = new Enemy();
+    newEnemy->Initialize(map_);
+    newEnemy->Updete();
+    enemies.push_back(newEnemy);
 }
 
-int GameScene::UpdateDraw(){
+int GameScene::UpdateDraw() {
     // ウィンドウの×ボタンが押されるまでループ
     while (Novice::ProcessMessage() == 0) {
         // フレームの開始
@@ -55,6 +51,12 @@ int GameScene::UpdateDraw(){
                 }
 
                 break;
+
+               // if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
+                    // currentState = SceneState::Clear;
+                //}
+
+                break;
         case SceneState::Clear:
 
             if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
@@ -87,7 +89,6 @@ int GameScene::UpdateDraw(){
                 for (auto& enemy : enemies) {
                     enemy->Drow();
                 }
-
                 break;
             case SceneState::Clear:
                 Novice::ScreenPrintf(0, 0, "Scene : Clear");
@@ -109,6 +110,5 @@ int GameScene::UpdateDraw(){
             }
         }
     }
-        return 0;
-    
+    return 0;
 }
