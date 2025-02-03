@@ -17,7 +17,7 @@ void GameScene::Initialize() {
 	map_->Initialize();
 
 	bgmManager_ = new BGMManager();
-    bgmManager_->Initialize(static_cast<int>(currentState));
+    bgmManager_->Initialize();
 }
 
 // 更新と描画処理
@@ -50,13 +50,13 @@ int GameScene::UpdateDraw() {
 			
             
 			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
-				// currentState = SceneState::Clear;
+				currentState = SceneState::Clear;
 			}
 			break;
 		case SceneState::Clear:
 			// クリア画面の処理
 			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN]) {
-				// currentState = SceneState::Title;
+				currentState = SceneState::Title;
 			}
 			break;
 		}
