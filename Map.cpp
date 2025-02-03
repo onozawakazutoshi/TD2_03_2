@@ -171,7 +171,7 @@ void Map::Update(const char* keys, const char* preKeys) {
 		// マップ読み込み
 		CheckLoadMap(mapFiles[1], mapData_.mapSizes[1]);
 	}
-	
+
 
 	// 使用例
 	//if (CanMoveToTile(mapData_, 1, 1)){
@@ -188,30 +188,30 @@ void Map::Draw() {
 	if (mapLoaded) {
 		switch (currentDrawMode) {
 		case DRAW_BOX:
-		for (int i = 0; i < mapData_.Height; i++) {
-			for (int j = 0; j < mapData_.Width; j++) {
-				// マップ
-				Novice::DrawBox(
-					int(mapData_.Mapposition[i][j].x),int(mapData_.Mapposition[i][j].y),
-					mapData_.size,mapData_.size,
-					0.0f,
-					mapData_.color[i][j],
-					kFillModeSolid
-				);
-				// 線
-				DrawLine(i, j);
+			for (int i = 0; i < mapData_.Height; i++) {
+				for (int j = 0; j < mapData_.Width; j++) {
+					// マップ
+					Novice::DrawBox(
+						int(mapData_.Mapposition[i][j].x), int(mapData_.Mapposition[i][j].y),
+						mapData_.size, mapData_.size,
+						0.0f,
+						mapData_.color[i][j],
+						kFillModeSolid
+					);
+					// 線
+					DrawLine(i, j);
+				}
 			}
-		}
-		Novice::DrawEllipse(
-			int(enemypos_.x+ Mapstart.x), int(enemypos_.y+ Mapstart.y),
-			int(enemysize_.x), int(enemysize_.y),
-			0.0f,
-			RED,
-			kFillModeSolid
-		);
+			Novice::DrawEllipse(
+				int(enemypos_.x + Mapstart.x), int(enemypos_.y + Mapstart.y),
+				int(enemysize_.x), int(enemysize_.y),
+				0.0f,
+				RED,
+				kFillModeSolid
+			);
 
 
-		break;
+			break;
 		case DRAW_SPRITE:
 			// 画像での描画
 			SpriteDraw();
@@ -224,7 +224,7 @@ void Map::Draw() {
 			break;
 		}
 	}
-	}
+}
 
 void Map::SpriteDraw() {
 	int resources = 0;
@@ -233,35 +233,38 @@ void Map::SpriteDraw() {
 		for (int j = 0; j < mapData_.Width; j++) {
 			if (mapData_.MAP[i][j] == 0) {
 				resources = tile;
-			}else if (mapData_.MAP[i][j] == 1) {
+			}
+			else if (mapData_.MAP[i][j] == 1) {
 				resources = SafEarea;
 			}
 			else if (mapData_.MAP[i][j] == 2) {
-				resources = Block; 
+				resources = Block;
 			}
 
 			Novice::DrawSprite(
-				int(mapData_.Mapposition[i][j].x),int(mapData_.Mapposition[i][j].y), //描画するスプライトの左上座標
+				int(mapData_.Mapposition[i][j].x), int(mapData_.Mapposition[i][j].y), //描画するスプライトの左上座標
 				resources,    // テクスチャハンドル
-				1,1,          // 描画するスプライトの倍率
+				1, 1,          // 描画するスプライトの倍率
 				0,            // 描画するスプライトの回転角
 				0xFFFFFFFF    // 色
-				);
+			);
 		}
-}
+	}
 }
 
 void Map::SpriteRectDraw() {
 	int resources = 0;
 	Vector2 starttile{};
-	resources = TiTles;	
+	resources = TiTles;
 	for (int i = 0; i < mapData_.Height; i++) {
 		for (int j = 0; j < mapData_.Width; j++) {
 			if (mapData_.MAP[i][j] == 0) {
 				starttile = startspritetile[0];
-			}else if (mapData_.MAP[i][j] == 1) {
+			}
+			else if (mapData_.MAP[i][j] == 1) {
 				starttile = startspritetile[1];
-			}else if (mapData_.MAP[i][j] == 2) {
+			}
+			else if (mapData_.MAP[i][j] == 2) {
 				starttile = startspritetile[2];
 			}
 
@@ -354,7 +357,7 @@ void Map::MouseUpdate() {
 		// マップが削除されている場合、マウス操作を無視または無効化
 		return;
 	}
-	
+
 	// マップカラ―
 	ColorMapping();
 
@@ -451,8 +454,8 @@ void Map::PlaceEnemyAtPosition(MapData& mapData, KamataEngine::Vector2& enemypos
 		// マップチップの座標を取得
 		KamataEngine::Vector2 tilePosition = mapData.Mapposition[mapY][mapX];
 		// 敵の位置をマップチップの中心に設定
-		enemypos.x = tilePosition.x + (mapData .size / 2.0f);
-		enemypos.y = tilePosition.y + (mapData .size / 2.0f);
+		enemypos.x = tilePosition.x + (mapData.size / 2.0f);
+		enemypos.y = tilePosition.y + (mapData.size / 2.0f);
 		// 敵のサイズをマップチップのサイズに設定s
 		enemysize = { 14.0f,14.0f };
 	}
