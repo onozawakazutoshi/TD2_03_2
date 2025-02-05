@@ -75,17 +75,17 @@ void Direction::Update(const char* keys, const char* preKeys) {
 	}
 
 	if (keys[DIK_SPACE] && !preKeys[DIK_SPACE] && fige == false) {
-		box_[0].position = { 1280.0,240.0f };
-		box_[0].size = { 1280.0f, -240.0f };
-		box_[1].position = { -1280.0f,490.0f };
-		box_[1].size = { 1280.0f, 230.0f };
-		box_[2].position = { -320.0f,275.0f };
-		box_[2].size = { 320.0f, 170.0f };
-		box_[3].position = { 0.0f,240.0f };
-		box_[3].size = { 1280.0f, 250.0f };
-		box_[3].color = WHITE;
-		fige = true;
-		Reset = false;
+		//box_[0].position = { 1280.0,240.0f };
+		//box_[0].size = { 1280.0f, -240.0f };
+		//box_[1].position = { -1280.0f,490.0f };
+		//box_[1].size = { 1280.0f, 230.0f };
+		//box_[2].position = { -320.0f,275.0f };
+		//box_[2].size = { 320.0f, 170.0f };
+		//box_[3].position = { 0.0f,240.0f };
+		//box_[3].size = { 1280.0f, 250.0f };
+		//box_[3].color = WHITE;
+		//fige = true;
+		//Reset = false;
 	}
 	
 	if (fige) {

@@ -28,12 +28,12 @@ int GameScene::UpdateDraw(){
 
         direction_->Update(keys,preKeys);
 
-        if (keys[DIK_R] && !preKeys[DIK_R] && direction_->GetReset() == false && direction_->Getfige() == true) {
-            direction_->Resetinitialization();
-            direction_->SetReset(true);
-            direction_->Setfige(false);
-            currentState = SceneState::Title;
-        }
+        //if (keys[DIK_R] && !preKeys[DIK_R] && direction_->GetReset() == false && direction_->Getfige() == true) {
+        //    direction_->Resetinitialization();
+        //    direction_->SetReset(true);
+        //    direction_->Setfige(false);
+        //    currentState = SceneState::Title;
+        //}
 
         switch (currentState) {
         case SceneState::Title:
