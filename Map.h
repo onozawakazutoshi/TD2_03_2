@@ -86,6 +86,7 @@ public:
 	int GetmapsizeW() {
 		return mapData_.Width;
 
+
 	}
 	int GetmapsizeH() {
 		return mapData_.Height;

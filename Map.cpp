@@ -390,8 +390,8 @@ void Map::MouseUpdate() {
 							// マウスを押している間、処理が行われる
 							// 色を変更
 							mapData_.color[neighborY][neighborX] = RED;
-							mapData_.MAP[neighborY][neighborX] = 1;
-							enemy->Initialize(this);
+							mapData_.MAP[neighborY][neighborX] = 2;
+							enemy->Initialize(this,NULL,NULL);
 							enemy->Updete();
 							if (enemy->GetNotRoad()) {
 								mapData_.color[neighborY][neighborX] = 0xFFFF0000 + 200;

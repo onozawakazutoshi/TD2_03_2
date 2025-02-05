@@ -51,14 +51,25 @@ private:
 
 	int NotRoadcount = 0;
 
+	int outcount = 0;
+
+	bool deleteflag = false;
 public:
-	void Initialize(Map* map_);
+	void Initialize(Map* map_, int isposX, int isposY);
 	void Updete();
 	void Road(int count);
 	void Drow();
 
 	bool GetNotRoad() {
 		return NotRoad;
+	}
+	int Getispos(int i) {
+		if (i == 0) {
+			return posrecord[roadMaxcount - (int)run].ispos[0];
+		}
+		else {
+			return posrecord[roadMaxcount - (int)run].ispos[1];
+		}
 	}
 
 	static int saiki_num;

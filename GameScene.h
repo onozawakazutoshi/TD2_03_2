@@ -28,7 +28,8 @@ private: // メンバ変数
 	SceneState currentState = SceneState::Game;// 初期のシーン
 	// ポインタ
 	Map* map_ = nullptr;
-	std::vector<Enemy*> enemies;
+
+	std::list<Enemy*> enemies;
 
 	int spawnTimer = 0;
 };
