@@ -26,7 +26,7 @@ private: // メンバ変数
 	char keys[256] = { 0 };
 	char preKeys[256] = { 0 };
 	// シーンの現在の状態
-	SceneState currentState = SceneState::Title;// 初期のシーン
+	SceneState currentState = SceneState::Game;// 初期のシーン
 	// ポインタ
 	Map* map_ = nullptr;
 	Enemy* enemy = new Enemy;
