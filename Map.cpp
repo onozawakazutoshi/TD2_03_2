@@ -114,6 +114,9 @@ void Map::Initialize() {
 	mouseData_.mousecount = 0;
 	mouseData_.PositionX = 0;
 	mouseData_.PositionY = 0;
+	mouseX = mouseData_.PositionX;
+	mouseY = mouseData_.PositionY;
+
 	// 開始の描画
 	startspritetile[0] = { 0.0f,0.0f };
 	startspritetile[1] = { 0.0f,32.0f };
@@ -361,56 +364,80 @@ void Map::MouseUpdate() {
 	// マウスの位置を取得
 	Novice::GetMousePosition(&mouseData_.PositionX, &mouseData_.PositionY);
 
-	// マウスの座標から選択中のマスを判定
-	int selectedX = (mouseData_.PositionX - int(Mapstart.x)) / mapData_.size; // 列番号
-	int selectedY = (mouseData_.PositionY - int(Mapstart.y)) / mapData_.size; // 行番号
+	// **マウスがマップの範囲内に入ったか判定**
+	bool isMouseInsideMap = (mouseData_.PositionX >= Mapstart.x &&
+		mouseData_.PositionX < Mapstart.x + mapData_.Width * mapData_.size &&
+		mouseData_.PositionY >= Mapstart.y &&
+		mouseData_.PositionY < Mapstart.y + mapData_.Height * mapData_.size);
 
-	if (selectedX >= 0 && selectedX < mapData_.Width &&
-		selectedY >= 0 && selectedY < mapData_.Height) {
-		// 指定範囲内のマスだけ色を変更
-		for (int i = 0; i < 1; i++) {          // 上下方向
-			for (int j = 0; j < 1; j++) {      // 左右方向
-				int neighborX = selectedX + j;  // 範囲内のX座標
-				int neighborY = selectedY + i;  // 範囲内のY座標
-				// 範囲チェック
-				if (neighborX >= 0 && neighborX < mapData_.Width &&
-					neighborY >= 0 && neighborY < mapData_.Height) {
+	// **範囲外から範囲内に入ったらフラグを変更**
+	static bool wasOutsideMap = true;  // 直前の状態を保持するフラグ
 
-					mapData_.color[neighborY][neighborX] = 0xFFFF0000 + 200;
+	if (isMouseInsideMap) {
+		if (wasOutsideMap) {
+			// 範囲外から範囲内に入った瞬間の処理
+			wasOutsideMap = false;
+		}
+		// マウスの座標から選択中のマスを判定
+		mouseX = (mouseData_.PositionX - int(Mapstart.x)) / mapData_.size; // 列番号
+		mouseY = (mouseData_.PositionY - int(Mapstart.y)) / mapData_.size; // 行番号
 
-					if (mapData_.MAP[neighborY][neighborX] == 0) {
-						enemy = new Enemy;
-						if (Novice::IsPressMouse(0)) {
+		if (mouseX >= 0 && mouseX < mapData_.Width &&
+			mouseY >= 0 && mouseY < mapData_.Height) {
+			// 指定範囲内のマスだけ色を変更
+			for (int i = 0; i < 1; i++) {          // 上下方向
+				for (int j = 0; j < 1; j++) {      // 左右方向
+					int neighborX = mouseX + j;  // 範囲内のX座標
+					int neighborY = mouseY + i;  // 範囲内のY座標
+					// 範囲チェック
+					if (neighborX >= 0 && neighborX < mapData_.Width &&
+						neighborY >= 0 && neighborY < mapData_.Height) {
+
+						mapData_.color[neighborY][neighborX] = 0xFFFF0000 + 200;
+
+						if (mapData_.MAP[neighborY][neighborX] == 0) {
+							enemy = new Enemy;
+							if (Novice::IsPressMouse(0)) {
 
 
-							mouseData_.mousecount++;
-							// マウスを押している間、処理が行われる
-							// 色を変更
-							mapData_.color[neighborY][neighborX] = RED;
-							mapData_.MAP[neighborY][neighborX] = 1;
-							enemy->Initialize(this);
-							enemy->Updete();
-							if (enemy->GetNotRoad()) {
-								mapData_.color[neighborY][neighborX] = 0xFFFF0000 + 200;
-								mapData_.MAP[neighborY][neighborX] = 0;
+								mouseData_.mousecount++;
+								// マウスを押している間、処理が行われる
+								// 色を変更
+								mapData_.color[neighborY][neighborX] = RED;
+								mapData_.MAP[neighborY][neighborX] = 1;
+								enemy->Initialize(this);
+								enemy->Updete();
+								if (enemy->GetNotRoad()) {
+									mapData_.color[neighborY][neighborX] = 0xFFFF0000 + 200;
+									mapData_.MAP[neighborY][neighborX] = 0;
+								}
+
+								//// プレイヤーの座標を、選択されたセルに基づいて設定
+								//playerpos.x = startX + neighborX * size + size / static_cast<float>(2) - playerradius / static_cast<float>(2);  // X座標を計算
+								//playerpos.y = startY + neighborY * size + size / static_cast<float>(2) - playerradius / static_cast<float>(2);  // Y座標を計算
+
+								mapchipchang = true;
+
+
+							} else {
+								mouseData_.mousecount = 0;
 							}
-
-							//// プレイヤーの座標を、選択されたセルに基づいて設定
-							//playerpos.x = startX + neighborX * size + size / static_cast<float>(2) - playerradius / static_cast<float>(2);  // X座標を計算
-							//playerpos.y = startY + neighborY * size + size / static_cast<float>(2) - playerradius / static_cast<float>(2);  // Y座標を計算
-
-							mapchipchang = true;
-
-
-						}
-						else {
-							mouseData_.mousecount = 0;
 						}
 					}
 				}
 			}
+		} else {
+			// **範囲外ならマウスの元の座標を使う**
+			if (!wasOutsideMap) {
+				// 範囲内から範囲外に出た瞬間の処理
+				wasOutsideMap = true;
+			}
 		}
 	}
+	if (ImGui::Begin("mouse")) {
+		ImGui::Checkbox("figr",&wasOutsideMap);
+	}
+	ImGui::End();
 }
 
 bool Map::SetTileRange(int setnumwidth, int setnumheight, int sizeX, int sizeY, int value) {

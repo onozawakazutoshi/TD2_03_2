@@ -119,7 +119,8 @@ private: // メンバ変数
 	KamataEngine::Vector2 Mapstart;
 	// マウスデータ
 	MouseData mouseData_;
-
+	int mouseX;
+	int mouseY;
 	// 線
 	KamataEngine::Vector2 linePos[MaxMapHeight][MaxMapWidth] = { 0.0f,0.0f };
 	// 読み込みフラグ
