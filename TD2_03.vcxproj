@@ -109,6 +109,8 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="C:\KamataEngine\Adapter\Novice.cpp" />
+    <ClCompile Include="Direction.cpp" />
+    <ClCompile Include="Ease.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Enemy.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -116,10 +118,11 @@ xcopy C:\KamataEngine\DirectXGame\Resources "$(OutDirFullPath)NoviceResources" /
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="GameScene.cpp" />
-   
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\KamataEngine\Adapter\Novice.h" />
+    <ClInclude Include="Direction.h" />
+    <ClInclude Include="Ease.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="Enemy.h" />

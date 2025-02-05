@@ -5,7 +5,12 @@ void GameScene::Initialize() {
 	map_->Initialize();
     enemy->Initialize(map_);
     enemy->Updete();
+
+    direction_ = new Direction();
+    direction_->Initialize();
+    titlescene = false;
 }
+
 
 int GameScene::UpdateDraw(){
     // ウィンドウの×ボタンが押されるまでループ
@@ -21,10 +26,19 @@ int GameScene::UpdateDraw(){
         ////////////////////////////////////////////////////// ↓更新処理ここから
         //////////////////////////////////////////////////////
 
+        direction_->Update(keys,preKeys);
+
+        if (keys[DIK_R] && !preKeys[DIK_R] && direction_->GetReset() == false && direction_->Getfige() == true) {
+            direction_->Resetinitialization();
+            direction_->SetReset(true);
+            direction_->Setfige(false);
+            currentState = SceneState::Title;
+        }
+
         switch (currentState) {
         case SceneState::Title:
 
-            if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
+            if (direction_->GetChange() == 2) {
                 currentState = SceneState::Game;
             }
 
@@ -59,6 +73,8 @@ int GameScene::UpdateDraw(){
         //////////////////////////////////////////////////////
         ////////////////////////////////////////////////////// ↓描画処理ここから
         //////////////////////////////////////////////////////
+
+        direction_->Draw();
 
         switch (currentState)
         {
